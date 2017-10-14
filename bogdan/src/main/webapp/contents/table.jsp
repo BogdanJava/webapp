@@ -7,33 +7,34 @@
 			<thead>
 				<tr>
 					<td width="1" style="text-align: center;"></td>
-					<td class="left id-column ">ID</td>
 					<td class="center image-column ">Photo</td>
 					<td class="left contact-column ">Name</td>
 					<td class="left model-column ">Address</td>
 					<td class="left qty-column ">E-mail</td>
+					<td class="left qty-column ">Job place</td>
 					<td class="right actions">Edit</td>
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="curr" items="${rows.contact}">
+			<c:forEach var="curr" items="${rows}">
 				<tr class="contact-row">
 					<td style="text-align: center;">
-						<input type="checkbox" id="${curr.id}" name="selected[]" value="${curr.id}"></td>
+						<input type="checkbox" id="${curr.contact.id}" name="selected[]" value="${curr.contact.id}"></td>
 						<td class="center contact-image image-column ">
 							<div class="image-wrapper">
-								<img src="${curr.photo.relativePath}">
+								<img src="${curr.contact.photo.relativePath}">
 							</div>
 						</td>
-					<td class="left contact-name contact-column"><a href="#">${curr.firstName}
-							${curr.lastName} ${curr.patronymic}</a></td>
-						<td class="left contact-model model-column ">${curr.state} ${curr.city} ${curr.postalCode} ${curr.street}
-						${curr.houseNumber}</td>
-						<td class="left quantity qty-column ">${curr.email}</td>
-						<td class="status left status-column ">${curr.jobPlace}</td>
+					<td class="left contact-name contact-column"><a href="#">${curr.contact.firstName}
+							${curr.contact.lastName} ${curr.contact.patronymic}</a></td>
+						<td class="left contact-model model-column ">${curr.contact.state} ${curr.contact.city}
+								${curr.contact.postalCode} ${curr.contact.street}
+						${curr.contact.houseNumber}</td>
+						<td class="left quantity qty-column ">${curr.contact.email}</td>
+						<td class="status left status-column ">${curr.contact.jobPlace}</td>
 						<td class="right nobr">
 							<div class="nobr">
-								<span class="edit-column "><a class="edit_link pe_action" href="${curr.websiteURL}"
+								<span class="edit-column "><a class="edit_link pe_action" href="${curr.contact.websiteURL}"
 															  title="Edit"></a></span>
 							</div>
 						</td>
