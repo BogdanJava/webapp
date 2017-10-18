@@ -25,14 +25,14 @@
     <servlet-mapping>
         <servlet-name>FrontController</servlet-name>
         <url-pattern>/</url-pattern>
-        <url-pattern>/add</url-pattern>
-        <url-pattern>/welcome</url-pattern>
-        <url-pattern>/contacts</url-pattern>
-        <url-pattern>/privet</url-pattern>
     </servlet-mapping>
 
     <filter-mapping>
         <filter-name>charsetFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>standardEncodeFilter</filter-name>
         <url-pattern>*</url-pattern>
     </filter-mapping>
     <filter-mapping>

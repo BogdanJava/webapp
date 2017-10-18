@@ -28,4 +28,16 @@ window.onload = function () {
         year.detachEvent('onchange', check_date);
         month.detachEvent('onchange', check_date);
     }
+
+    var _day = document.getElementById("day");
+    var _month = document.getElementById("month");
+    var _year = document.getElementById("year")
+
+    if(document.getElementById("hidden_day") != null) {
+        _day.value = document.getElementById("hidden_day").value;
+        var m = parseInt(document.getElementById("hidden_month").value);
+        _month.selectedIndex = m;
+        var y = Number(1900) + Number(document.getElementById("hidden_year").value)
+        _year.value = y;
+    }
 }

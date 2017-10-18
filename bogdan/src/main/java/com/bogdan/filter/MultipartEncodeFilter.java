@@ -6,6 +6,7 @@ import com.bogdan.pojo.Phone;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 
@@ -43,6 +44,9 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
         List<String> comments = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
         List<String> fileComments = new ArrayList<>();
+        List<String> deletedFiles = new ArrayList<>();
+        List<String> deletedPhones = new ArrayList<>();
+
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(1024 * 1024);
@@ -57,16 +61,22 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
                     if (item.getFieldName().equals("photo")) {
                         AttachedFile photo = new AttachedFile();
                         photo.setName(RandomStringUtils.randomNumeric(5) + "_" + "profilephoto");
-                        photo.setBytes(item.get());
+                        photo.setBytes(ArrayUtils.toObject(item.get()));
                         servletRequest.setAttribute("profile_photo", photo);
                     } else {
                         AttachedFile file = new AttachedFile();
-                        file.setBytes(item.get());
+                        file.setBytes(ArrayUtils.toObject(item.get()));
                         afList.add(file);
                     }
                 } else {
                     LOGGER.info(item.getFieldName() + ": " + item.getString());
                     switch (item.getFieldName()) {
+                        case "deletedFile":
+                            deletedFiles.add(item.getString());
+                            break;
+                        case "deletedPhone":
+                            deletedPhones.add(item.getString());
+                            break;
                         case "country_code_val":
                             countryCodes.add(item.getString());
                             break;
@@ -112,7 +122,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
         for (int i = 0; i < afList.size(); i++) {
             AttachedFile thisFile = afList.get(i);
             thisFile.setType(LogicUtils.getFileType(fileRealNames.get(i)));
-            thisFile.setName(fileNames.get(i) + "_" + RandomStringUtils.randomNumeric(5));
+            thisFile.setName(fileNames.get(i));
             thisFile.setDescription(fileComments.get(i));
         }
         LOGGER.info(fileRealNames);
@@ -120,5 +130,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
         LOGGER.info("Number of files: " + afList.size());
         servletRequest.setAttribute("phoneList", phoneList);
         servletRequest.setAttribute("fileList", afList);
+        servletRequest.setAttribute("deletedPhones", deletedPhones);
+        servletRequest.setAttribute("deletedFiles", deletedFiles);
     }
 }

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class FrontController extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(FrontController.class);
+    private static final Logger LOGGER = Logger.getLogger("front_logger");
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

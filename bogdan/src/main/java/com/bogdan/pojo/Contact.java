@@ -4,24 +4,29 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Contact implements Serializable {
-    private int id;
-    private String firstName;
-    private String lastName;
+    private Integer id;
+    private String first_name;
+    private String last_name;
     private String patronymic;
     private String gender;
-    private String maritalStatus;
-    private String websiteURL;
+    private String marital_status;
+    private String website_url;
     private String email;
-    private String jobPlace;
-    private String postalCode;
+    private String job_place;
+    private String postal_code;
     private Date birthDate;
     private String state;
     private String city;
     private String street;
-    private String houseNumber;
+    private String house_number;
     private AttachedFile photo;
     private String comment;
 
+    public Contact(){}
+
+    public Contact(Integer id){
+        this.id = id;
+    }
 
     public int getId() {
         return id;
@@ -31,20 +36,20 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getPatronymic() {
@@ -63,20 +68,20 @@ public class Contact implements Serializable {
         this.gender = gender;
     }
 
-    public String getMaritalStatus() {
-        return maritalStatus;
+    public String getMarital_status() {
+        return marital_status;
     }
 
-    public void setMaritalStatus(String maritalStatus) {
-        this.maritalStatus = maritalStatus;
+    public void setMarital_status(String marital_status) {
+        this.marital_status = marital_status;
     }
 
-    public String getWebsiteURL() {
-        return websiteURL;
+    public String getWebsite_url() {
+        return website_url;
     }
 
-    public void setWebsiteURL(String websiteURL) {
-        this.websiteURL = websiteURL;
+    public void setWebsite_url(String website_url) {
+        this.website_url = website_url;
     }
 
     public String getEmail() {
@@ -87,20 +92,20 @@ public class Contact implements Serializable {
         this.email = email;
     }
 
-    public String getJobPlace() {
-        return jobPlace;
+    public String getJob_place() {
+        return job_place;
     }
 
-    public void setJobPlace(String jobPlace) {
-        this.jobPlace = jobPlace;
+    public void setJob_place(String job_place) {
+        this.job_place = job_place;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getPostal_code() {
+        return postal_code;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setPostal_code(String postal_code) {
+        this.postal_code = postal_code;
     }
 
     public Date getBirthDate() {
@@ -135,20 +140,20 @@ public class Contact implements Serializable {
         this.street = street;
     }
 
-    public String getHouseNumber() {
-        return houseNumber;
+    public String getHouse_number() {
+        return house_number;
     }
 
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setHouse_number(String house_number) {
+        this.house_number = house_number;
     }
 
     public AttachedFile getPhoto() {
         return photo;
     }
 
-    public void setPhoto(AttachedFile photoURL) {
-        this.photo = photoURL;
+    public void setPhoto(AttachedFile photo) {
+        this.photo = photo;
     }
 
     public String getComment() {
@@ -161,11 +166,11 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return  "id: " + id + "; first_name: " + getFirstName() + "; last_name: " + getLastName() +
-                "; patronymic: " + getPatronymic() + " gender: " + getGender() + "; marital_status: " + getMaritalStatus() +
-                "; website: " + getWebsiteURL() + "; email: " + getEmail() + "; job_place: " + getJobPlace() +
-                "; postal: " + getPostalCode() + "; birth_date: " + getBirthDate() + "; country: " + getState()+
-                "; city: " + getCity() + "; street: " + getStreet() + "; house: " + getHouseNumber() +
+        return  "id: " + getId() + "; first_name: " + getFirst_name() + "; last_name: " + getLast_name() +
+                "; patronymic: " + getPatronymic() + " gender: " + getGender() + "; marital_status: " + getMarital_status() +
+                "; website: " + getWebsite_url() + "; email: " + getEmail() + "; job_place: " + getJob_place() +
+                "; postal: " + getPostal_code() + "; birth_date: " + getBirthDate() + "; country: " + getState()+
+                "; city: " + getCity() + "; street: " + getStreet() + "; house: " + getHouse_number() +
                 "; comment: " + getComment();
     }
 }

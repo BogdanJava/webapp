@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ApplicationControllerMapper {
-    private static Map<String, Class> processors = new HashMap<String, Class>();
+    private static Map<String, Class> processors = new HashMap<>();
     static {
         processors.put(null, BasicApplicationController.class);
         processors.put("basic", BasicApplicationController.class);

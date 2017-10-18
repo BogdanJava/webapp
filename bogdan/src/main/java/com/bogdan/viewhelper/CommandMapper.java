@@ -4,7 +4,7 @@ import java.util.Map;
 
 public abstract class CommandMapper {
 
-    protected abstract Map<String, Class> getProcessors();
+    protected abstract Map<String, Class<? extends Command>> getProcessors();
 
     public Command getRequestProcessor(String command) {
         Class processorClass = getProcessors().get(command);

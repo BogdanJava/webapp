@@ -1,11 +1,16 @@
 package com.bogdan.dao;
 
+import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.Phone;
+import org.apache.log4j.Logger;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class MysqlPhoneDAO implements GenericDAO<Phone> {
+
+    private static final Logger LOGGER = Logger.getLogger("phone_logger");
 
     public int insert(Phone p) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
@@ -39,7 +44,7 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
             String sql = "UPDATE phone_book SET deleted = 1 WHERE id = ?";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, key);
-            ps.execute();
+            ps.executeUpdate();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,8 +59,31 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
         }
     }
 
-    public ArrayList<Phone> find(Phone data) {
-        return null;
+    public ArrayList<Phone> find(Phone data) throws SQLException {
+        Connection conn = MysqlDAOFactory.createConnection();
+        String sql = "SELECT * FROM phone_book WHERE deleted=0 AND";
+        Statement statement = conn.createStatement();
+        ArrayList<Phone> list = null;
+        ArrayList<Field> notNullFields = new ArrayList<>();
+        ArrayList<Object> values = new ArrayList<>();
+        try {
+            Field[] fields =  Phone.class.getDeclaredFields();
+            LogicUtils.initLists(fields, notNullFields, values, data);
+
+            String sqlString = LogicUtils.getQuery(sql, notNullFields, values);
+
+            LOGGER.info(sqlString);
+            ResultSet set = statement.executeQuery(sqlString);
+            list =  LogicUtils.getPhonesFromResultSet(set);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(conn != null) conn.close();
+        }
+
+        if(list.size() != 0) return list;
+        else return null;
     }
 
     public ArrayList<Phone> getAll(int contactId) throws SQLException {
@@ -68,20 +96,7 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
             statement.setInt(1, contactId);
             ResultSet lines = statement.executeQuery();
 
-            while(lines.next()){
-                Phone p = new Phone();
-                p.setComment(lines.getString("comment"));
-                p.setContactId(lines.getInt("contact_id"));
-                p.setNumber(lines.getString("number"));
-                p.setOperatorCode(lines.getString("operator_code"));
-                p.setStateCode(lines.getString("state_code"));
-                p.setType(lines.getString("phone_type"));
-                list.add(p);
-            }
-            if(list.size() > 0){
-                return list;
-            }
-            else return null;
+            return LogicUtils.getPhonesFromResultSet(lines);
 
         } finally {
             if(statement != null) statement.close();

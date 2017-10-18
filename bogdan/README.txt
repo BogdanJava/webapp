@@ -8,5 +8,3 @@ add this resource to context.xml:
 
 Сидел и доделывал table.jsp, но не успел немного. Глянь заодно, что там не так)
 Атрибут rows я кладу в классе ShowContactsViewHelper
-
-UPD 14.10.2017 14:17  Исправил эту ошибку

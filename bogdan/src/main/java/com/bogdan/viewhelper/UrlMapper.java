@@ -9,6 +9,8 @@ public class UrlMapper {
         pathProcessor.put("/add", "viewAddContact");
         pathProcessor.put("/welcome", "viewWelcome");
         pathProcessor.put("/contacts", "viewContacts");
+        pathProcessor.put("/edit", "viewEdit");
+        pathProcessor.put("/search", "viewSearch");
         pathProcessor.put("/", "viewWelcome");
     }
     public static String getCommandName(String pathInfo){

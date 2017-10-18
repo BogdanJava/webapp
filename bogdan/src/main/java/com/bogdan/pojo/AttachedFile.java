@@ -4,18 +4,26 @@ import java.io.File;
 import java.io.Serializable;
 
 public class AttachedFile implements Serializable {
+
+    public static final String DEFAULTPHOTOURL = "https://pp.userapi.com/c837624/v837624857/5794b/LLJfnj6Xnos.jpg";
     public static String UPLOADPATH = System.getProperty("catalina.base") + File.separator + "webapps" + File.separator + "upload"
             + File.separator;
     public static String RELATIVEPATH =  File.separator + "upload" + File.separator;
 
-    private int id;
+    private Integer id;
     private String name;
     private String relativePath;
     private String realPath;
     private String description;
-    private int contactId;
-    private byte[] bytes;
+    private Integer contact_id;
+    private Byte[] bytes;
     private String type;
+
+    public AttachedFile(){}
+
+    public AttachedFile(Integer contact_id){
+        this.contact_id = contact_id;
+    }
 
     public String getType() {
         return type;
@@ -33,11 +41,11 @@ public class AttachedFile implements Serializable {
         this.name = name;
     }
 
-    public byte[] getBytes() {
+    public Byte[] getBytes() {
         return bytes;
     }
 
-    public void setBytes(byte[] bytes) {
+    public void setBytes(Byte[] bytes) {
         this.bytes = bytes;
     }
 
@@ -45,7 +53,7 @@ public class AttachedFile implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,10 +82,15 @@ public class AttachedFile implements Serializable {
     }
 
     public int getContactId() {
-        return contactId;
+        return contact_id;
     }
 
     public void setContactId(int contactId) {
-        this.contactId = contactId;
+        this.contact_id = contactId;
+    }
+
+    @Override
+    public String toString() {
+        return name + type;
     }
 }

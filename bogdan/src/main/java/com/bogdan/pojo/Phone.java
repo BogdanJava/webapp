@@ -3,19 +3,25 @@ package com.bogdan.pojo;
 import java.io.Serializable;
 
 public class Phone implements Serializable{
-    private int id;
+    private Integer id;
     private String stateCode;
     private String operatorCode;
     private String number;
     private String type;
     private String comment;
-    private int contactId;
+    private Integer contact_id;
+
+    public Phone(){}
+
+    public Phone(Integer contact_id){
+        this.contact_id = contact_id;
+    }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -60,11 +66,11 @@ public class Phone implements Serializable{
     }
 
     public int getContactId() {
-        return contactId;
+        return contact_id;
     }
 
     public void setContactId(int contactId) {
-        this.contactId = contactId;
+        this.contact_id = contactId;
     }
 
     @Override

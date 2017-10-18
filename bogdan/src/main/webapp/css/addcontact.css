@@ -36,6 +36,18 @@ h2 {
     margin: 0;
     font-weight: normal;
 }
+h3 {
+    font-size: 1.0rem;
+    text-align: center;
+    margin: 0;
+    font-weight: normal;
+}
+h4 {
+    font-size: 0.6rem;
+    text-align: center;
+    margin: 0;
+    font-weight: normal;
+}
 
 .container {
     position: relative;
@@ -82,7 +94,7 @@ fieldset {
 }
 
 .form-inline > .form-group,
-.form-inline > .btn {
+.form-inline > .input {
     display: inline-block;
     margin-bottom: 0;
 }

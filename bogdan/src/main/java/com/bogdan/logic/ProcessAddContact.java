@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class ProcessAddContact implements Command{
 
     private final static Logger LOGGER = Logger.getLogger("adding_logger");
-
     private GenericDAO<Contact> contactDao = new MysqlContactDAO();
     private GenericDAO<Phone> phoneDao = new MysqlPhoneDAO();
     private GenericDAO<AttachedFile> fileDao = new MysqlFileDAO();
@@ -32,6 +31,8 @@ public class ProcessAddContact implements Command{
         StringBuilder addProcessLog = new StringBuilder();
         try {
             Contact contact = LogicUtils.initContact(req);
+            if(contact.getPhoto() != null)
+                LogicUtils.createFile(contact, contact.getPhoto());
             contact.setId(contactDao.insert(contact));
             if(contact.getId() != -1) {
                 addProcessLog.append("Contact inserted: " + contact.toString() + "\n");
@@ -50,10 +51,10 @@ public class ProcessAddContact implements Command{
             else {
                 addProcessLog.insert(0, "There was some error while adding contact.\n");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e){
-            e.printStackTrace();
+        } catch (SQLException | ParseException e) {
+            for(StackTraceElement el : e.getStackTrace()){
+                LOGGER.info(el + "\n");
+            }
         }
 
         LOGGER.info(addProcessLog.toString());

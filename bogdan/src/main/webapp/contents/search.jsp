@@ -1,0 +1,104 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<link href="css/addcontact.css" type="text/css" rel="stylesheet"/>
+
+<div class="container">
+    <h1>Поиск по критериям</h1>
+    <form method="get" action="contacts">
+        <h2>Личные данные</h2>
+        <div class="form-group">
+            <input type="text" name="first_name" id="first_name">
+            <label class="control-label" for="first_name">Имя</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" name="last_name" id="last_name">
+            <label class="control-label" for="last_name">Фамилия</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" name="patronymic" id="patronymic">
+            <label class="control-label" for="patronymic">Отчество</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <div class="form-radio gend">
+                <div class="radio" id="gender" >
+                    <label>
+                        <input type="radio" name="gender" value="male"><i class="helper"></i>Мужской
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="female"><i class="helper"></i>Женский
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="none" checked><i class="helper"></i>Любой
+                    </label>
+                </div>
+                <label class="control-label" for="gender">Пол</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <select id="select" name="marital" >
+                <option value="single" selected>Не женат / не замужем</option>
+                <option value="married">Женат / замужем</option>
+                <option value="none" selected="selected">Не выбрано</option>
+            </select><br>
+            <label class="control-label" for="select">Семейное положение</label><i class="bar"></i>
+        </div>
+        <h3>Дата рождения</h3>
+        <div id="more_date">
+        <h4>Старше, чем: </h4>
+        <div class="form-group">
+            <div class="form-inline">
+                <input type="text" name="more_day" id="more_day" class="date">
+                <label class="control-label" for="more_day">День</label><i class="bar"></i>
+            </div>
+            <div class="form-inline">
+                <input type="text" name="more_month" id="more_month" class="date">
+                <label class="control-label" for="more_month">Месяц</label><i class="bar"></i>
+            </div>
+            <div class="form-inline">
+                <input type="text" name="more_year" id="more_year" class="date">
+                <label class="control-label" for="more_year">Год</label><i class="bar"></i>
+            </div>
+        </div>
+        </div>
+        <div id="less_date">
+        <h4>Младше, чем: </h4>
+        <div class="form-inline">
+            <input type="text" name="less_day" id="less_day" class="date">
+            <label class="control-label" for="less_day">День</label><i class="bar"></i>
+        </div>
+            <div class="form-inline">
+                <input type="text" name="less_month" id="less_month" class="date">
+                <label class="control-label" for="less_month">Месяц</label><i class="bar"></i>
+            </div>
+            <div class="form-inline">
+                <input type="text" name="less_year" id="less_year" class="date">
+                <label class="control-label" for="less_year">Год</label><i class="bar"></i>
+            </div>
+        </div>
+        <h2>Контактная информация</h2>
+        <div class="form-group">
+            <input type="text" id="country" name="country" >
+            <label class="control-label" for="country">Страна</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" id="index" name="index" >
+            <label class="control-label" for="index">Индекс</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" id="city" name="city" >
+            <label class="control-label" for="city">Город</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" id="street" name="street" >
+            <label class="control-label" for="street">Улица</label><i class="bar"></i>
+        </div>
+        <div class="form-group">
+            <input type="text" id="house_number" name="house_number" >
+            <label class="control-label" for="house_number">Дом</label><i class="bar"></i>
+        </div>
+        <div class="button-container" id="buttonContainer">
+            <input type="hidden" name="command" value="processSearchContacts">
+            <input type="hidden" name="application" value="basic">
+            <button id="searchButton" class="button" type="button" onclick="submitSearch()"><span>Поиск</span></button>
+        </div>
+    </form>
+</div>
