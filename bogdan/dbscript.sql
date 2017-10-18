@@ -2,6 +2,9 @@ create database shishkin_bogdan_db
 character set 'utf8mb4'
 collate 'utf8_general_ci';
 
+CREATE USER 'vasya'@'localhost' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON shishkin_bogdan_db.* TO 'vasya'@'localhost'
+
 use shishkin_bogdan_db;
 
 CREATE TABLE `contact_book` (
@@ -51,6 +54,7 @@ CREATE TABLE `attached_files` (
   `real_path` varchar(100) NOT NULL,
   `deleted` bit(1) DEFAULT b'0',
   `name` varchar(45) DEFAULT NULL,
+  'type' varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `contact_fk_idx` (`contact_id`),
