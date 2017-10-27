@@ -32,7 +32,7 @@ public class LoggingFilter implements Filter {
         builder.append("\nRequest headers are :" + params.size());
         builder.append("\nTotal amount of request parameters is:" + params.size());
         for(String param : params.keySet()) {
-            builder.append("\nParameter " + param + " has value " + params.get(param).toString());
+            builder.append("\nParameter " + param + " has value " + params.get(param)[0]);
         }
         LOGGER.info(builder.toString());
     }

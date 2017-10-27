@@ -6,6 +6,7 @@
         <li><a href="add">Добавить</a></li>
         <li><a href="contacts">Контакты</a></li>
         <li><a href="search">Поиск</a></li>
+        <li><a href="sendMail">Рассылка</a></li>
         <li><a href="#">О сайте</a></li>
     </ul>
     </nav>

@@ -27,7 +27,13 @@ public class ProcessDeleteContacts implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        Integer[] deletedContactsId = LogicUtils.parseStringToInt((String[])req.getAttribute("toDelete"));
+        Integer[] deletedContactsId = null;
+        if(req.getAttribute("toDelete") instanceof String[]) {
+            deletedContactsId = LogicUtils.parseStringToInt((String[]) req.getAttribute("toDelete"));
+        } else {
+            deletedContactsId = new Integer[1];
+            deletedContactsId[0] = Integer.parseInt((String)req.getAttribute("toDelete"));
+        }
         try {
             for (int contactId : deletedContactsId) {
                 contactDAO.delete(contactId);

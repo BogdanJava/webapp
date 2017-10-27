@@ -34,27 +34,21 @@ public class ProcessModifyContact implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         StringBuilder builder = new StringBuilder();
-
         ArrayList<String> deletedPhoneIds = (ArrayList<String>)req.getAttribute("deletedPhones");
         ArrayList<String> deletedFilesIds = (ArrayList<String>)req.getAttribute("deletedFiles");
-
         LOGGER.info("Files: " + deletedFilesIds.size() + ", phones: " + deletedPhoneIds.size());
-
         try {
             Integer contactId = Integer.parseInt((String)req.getAttribute("editContactId"));
             Contact contact = LogicUtils.initContact(req);
             contact.setId(contactId);
-
             ArrayList<Phone> phones = LogicUtils.initPhones(req, contactId);
             ArrayList<AttachedFile> files = LogicUtils.initFiles(req, contactId);
-
             if(!LogicUtils.createFile(contact, contact.getPhoto())) {
                 AttachedFile oldPhoto = contactDAO.find(new Contact(contactId)).get(0).getPhoto();
                 if(new File(LogicUtils.getAbsoluteOfRelative(oldPhoto.getRelativePath())).exists())
                     contact.setPhoto(oldPhoto);
                 else contact.setPhoto(null);
             }
-
             if(contactDAO.update(contactId, contact))
             builder.append("Contact #" + contactId + " updated: " + contact);
 
@@ -73,15 +67,11 @@ public class ProcessModifyContact implements Command {
                     builder.append("New file " + file + " inserted");
                 }
             }
-
             for(Phone phone : phones){
-
                 phoneDAO.insert(phone);
                 builder.append("New phone " + phone + " inserted");
             }
-
             LOGGER.info(builder.toString());
-
             new ShowContactsViewHelper().execute(req, res);
         } catch (ParseException | SQLException e){
             LOGGER.info("Exception while updating file: " + e);

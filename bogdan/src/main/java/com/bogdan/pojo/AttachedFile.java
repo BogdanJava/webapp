@@ -12,12 +12,12 @@ public class AttachedFile implements Serializable {
 
     private Integer id;
     private String name;
-    private String relativePath;
-    private String realPath;
+    private String relative_path;
+    private String real_path;
     private String description;
     private Integer contact_id;
     private Byte[] bytes;
-    private String type;
+    private String file_type;
 
     public AttachedFile(){}
 
@@ -26,11 +26,11 @@ public class AttachedFile implements Serializable {
     }
 
     public String getType() {
-        return type;
+        return file_type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.file_type = type;
     }
 
     public String getName() {
@@ -58,19 +58,19 @@ public class AttachedFile implements Serializable {
     }
 
     public String getRelativePath() {
-        return relativePath;
+        return relative_path;
     }
 
     public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
+        this.relative_path = relativePath;
     }
 
     public String getRealPath() {
-        return realPath;
+        return real_path;
     }
 
     public void setRealPath(String realPath) {
-        this.realPath = realPath;
+        this.real_path = realPath;
     }
 
     public String getDescription() {
@@ -91,6 +91,6 @@ public class AttachedFile implements Serializable {
 
     @Override
     public String toString() {
-        return name + type;
+        return name + file_type;
     }
 }

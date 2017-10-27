@@ -33,13 +33,13 @@ public class ModifyContactViewHelper implements Command {
             contactId = Integer.parseInt(req.getParameter("id"));
             contact = contactDAO.find(new Contact(contactId)).get(0);
             phones = phoneDAO.find(new Phone(contactId));
-            LOGGER.info(phones);
             files = fileDAO.find(new AttachedFile(contactId));
 
         } catch(NumberFormatException e){
             new AddContactPageViewHelper().execute(req, res);
             return;
         } catch (SQLException e) {
+            LOGGER.info(e.getMessage());
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
             }

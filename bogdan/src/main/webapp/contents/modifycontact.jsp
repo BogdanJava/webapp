@@ -12,11 +12,11 @@
         <input type="hidden" name="editContactId" value="${contact.id}">
         <h2>Личные данные</h2>
         <div class="form-group">
-            <input type="text" name="first_name" id="first_name" value="${contact.first_name}" required autofocus>
+            <input type="text" name="first_name" id="first_name" value="${contact.firstName}" required autofocus>
             <label class="control-label" for="first_name">Имя</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="last_name" id="last_name" value="${contact.last_name}" required>
+            <input type="text" name="last_name" id="last_name" value="${contact.lastName}" required>
             <label class="control-label" for="last_name">Фамилия</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -57,10 +57,10 @@
         <div class="form-group">
             <c:set var="single" value=""/>
             <c:set var="married" value=""/>
-            <c:if test="${contact.marital_status == 'married'}">
+            <c:if test="${contact.maritalStatus == 'married'}">
                 <c:set var="married" value="selected"/>
             </c:if>
-            <c:if test="${contact.marital_status == 'single'}">
+            <c:if test="${contact.maritalStatus == 'single'}">
                 <c:set var="single" value="selected"/>
             </c:if>
             <select id="select" name="marital" >
@@ -70,11 +70,11 @@
             <label class="control-label" for="select">Семейное положение</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="url" id="url" value="${contact.website_url}">
+            <input type="text" name="url" id="url" value="${contact.websiteUrl}">
             <label class="control-label" for="url">Личный сайт</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="job" name="job" value="${contact.job_place}">
+            <input type="text" id="job" name="job" value="${contact.jobPlace}">
             <label class="control-label" for="job">Место работы</label><i class="bar"></i>
         </div>
         <h2>Контактная информация</h2>
@@ -83,7 +83,7 @@
             <label class="control-label" for="country">Страна</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="index" name="index" value="${contact.postal_code}">
+            <input type="text" id="index" name="index" value="${contact.postalCode}">
             <label class="control-label" for="index">Индекс</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -95,7 +95,7 @@
             <label class="control-label" for="street">Улица</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="house_number" name="house_number" value="${contact.house_number}">
+            <input type="text" id="house_number" name="house_number" value="${contact.houseNumber}">
             <label class="control-label" for="house_number">Дом</label><i class="bar"></i>
         </div>
         <div class="form-group">

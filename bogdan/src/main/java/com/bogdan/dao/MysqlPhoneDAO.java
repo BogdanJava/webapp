@@ -59,31 +59,46 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
         }
     }
 
+    public ArrayList<Phone> getLimited(int from, int number, int contactId) throws SQLException {
+        Connection conn = MysqlDAOFactory.createConnection();
+        PreparedStatement ps = null;
+        try{
+            String sql = "SELECT * FROM phone_book WHERE contact_id = ? LIMIT ?, ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, contactId);
+            ps.setInt(2, from);
+            ps.setInt(3, number);
+            ResultSet resultSet = ps.executeQuery();
+            ArrayList<Phone> phones = LogicUtils.getPhonesFromResultSet(resultSet);
+            return phones;
+        } finally {
+            if(conn != null) conn.close();
+            if(ps != null) ps.close();
+        }
+    }
+
     public ArrayList<Phone> find(Phone data) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
-        String sql = "SELECT * FROM phone_book WHERE deleted=0 AND";
-        Statement statement = conn.createStatement();
+        String sql = "SELECT * FROM phone_book WHERE deleted=0";
+        PreparedStatement statement = null;
         ArrayList<Phone> list = null;
         ArrayList<Field> notNullFields = new ArrayList<>();
         ArrayList<Object> values = new ArrayList<>();
         try {
             Field[] fields =  Phone.class.getDeclaredFields();
             LogicUtils.initLists(fields, notNullFields, values, data);
-
             String sqlString = LogicUtils.getQuery(sql, notNullFields, values);
-
+            statement = conn.prepareStatement(sqlString);
+            LogicUtils.initStatement(statement, notNullFields, values);
             LOGGER.info(sqlString);
-            ResultSet set = statement.executeQuery(sqlString);
+            ResultSet set = statement.executeQuery();
             list =  LogicUtils.getPhonesFromResultSet(set);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } finally {
             if(statement != null) statement.close();
             if(conn != null) conn.close();
         }
 
-        if(list.size() != 0) return list;
-        else return null;
+        return list;
     }
 
     public ArrayList<Phone> getAll(int contactId) throws SQLException {

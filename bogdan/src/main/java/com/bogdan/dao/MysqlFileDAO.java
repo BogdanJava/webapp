@@ -2,12 +2,15 @@ package com.bogdan.dao;
 
 import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.AttachedFile;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class MysqlFileDAO implements GenericDAO<AttachedFile> {
+
+    private static final Logger LOGGER = Logger.getLogger("file_logger");
 
     public int insert(AttachedFile file) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
@@ -35,6 +38,24 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
         }
     }
 
+    public ArrayList<AttachedFile> getLimited(int from, int number, int contactId) throws SQLException {
+        Connection conn = MysqlDAOFactory.createConnection();
+        PreparedStatement ps = null;
+        try{
+            String sql = "SELECT * FROM attached_files WHERE contact_id = ? LIMIT ?, ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, contactId);
+            ps.setInt(2, from);
+            ps.setInt(3, number);
+            ResultSet resultSet = ps.executeQuery();
+            ArrayList<AttachedFile> files = LogicUtils.getFilesFromResultSet(resultSet);
+            return files;
+        } finally {
+            if(conn != null) conn.close();
+            if(ps != null) ps.close();
+        }
+    }
+
     public boolean delete(int key) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
         PreparedStatement ps = null;
@@ -56,29 +77,25 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
 
     public ArrayList<AttachedFile> find(AttachedFile data) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
-        String sql = "SELECT * FROM attached_files WHERE deleted=0 AND";
-        Statement statement = conn.createStatement();
+        String sql = "SELECT * FROM attached_files WHERE deleted=0";
+        PreparedStatement statement = null;
         ArrayList<AttachedFile> list = null;
         ArrayList<Field> notNullFields = new ArrayList<>();
         ArrayList<Object> values = new ArrayList<>();
         try {
             Field[] fields =  AttachedFile.class.getDeclaredFields();
             LogicUtils.initLists(fields, notNullFields, values, data);
-
             String sqlString = LogicUtils.getQuery(sql, notNullFields, values);
-
-            ResultSet set = statement.executeQuery(sqlString);
+            statement = conn.prepareStatement(sqlString);
+            LogicUtils.initStatement(statement, notNullFields, values);
+            LOGGER.info(sqlString);
+            ResultSet set = statement.executeQuery();
             list =  LogicUtils.getFilesFromResultSet(set);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } finally {
             if(statement != null) statement.close();
             if(conn != null) conn.close();
         }
-
-        if(list.size() != 0) return list;
-        else return null;
-
+        return list;
     }
 
     public ArrayList<AttachedFile> getAll(int contactId) throws SQLException {

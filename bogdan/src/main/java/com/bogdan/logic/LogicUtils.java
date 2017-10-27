@@ -1,5 +1,6 @@
 package com.bogdan.logic;
 
+import com.bogdan.dao.GenericDAO;
 import com.bogdan.dao.MysqlContactDAO;
 import com.bogdan.dao.MysqlFileDAO;
 import com.bogdan.dao.MysqlPhoneDAO;
@@ -7,6 +8,9 @@ import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.Phone;
 import com.bogdan.pojo.Row;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
+import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
@@ -15,15 +19,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.sql.Array;
+import java.lang.reflect.Modifier;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 
 public class LogicUtils {
     private static final Logger LOGGER = Logger.getLogger("user_action_logger");
@@ -33,8 +37,33 @@ public class LogicUtils {
         }
     }
 
+    public static void initTemplates(HttpServletRequest req){
+        if(req.getServletContext().getAttribute("templates") == null) {
+            StringTemplateGroup stGroup = new StringTemplateGroup("group",
+                    LogicUtils.getAbsoluteOfRelative(req.getServletContext().getContextPath()) +
+                            "\\mailtemplates", DefaultTemplateLexer.class);
+
+            ArrayList<StringTemplate> templates = new ArrayList<>();
+            templates.add(stGroup.getInstanceOf("adv"));
+            templates.add(stGroup.getInstanceOf("birthday"));
+            req.getServletContext().setAttribute("templates", templates);
+        }
+    }
+
+    public static String getTemplateName(String fileName){
+        switch(fileName){
+            case "adv": return "Рекламный";
+            case "birthday": return "Поздравление с ДР";
+            case "newyear": return "Поздравление с НГ";
+            default: return null;
+        }
+    }
+
     public static boolean createFile(Contact contact, AttachedFile file) {
 
+        if(contact == null || file == null){
+            return false;
+        }
         String dirPath = AttachedFile.UPLOADPATH + contact.getEmail();
 
         if(!new File(dirPath).exists()){
@@ -102,24 +131,26 @@ public class LogicUtils {
 
     public static Contact initContact(HttpServletRequest req) throws ParseException {
         Contact c = new Contact();
-        c.setFirst_name((String)req.getAttribute("first_name"));
-        c.setLast_name((String)req.getAttribute("last_name"));
+        c.setFirstName((String)req.getAttribute("first_name"));
+        c.setLastName((String)req.getAttribute("last_name"));
         c.setPatronymic((String)req.getAttribute("patronymic"));
         String year = (String)req.getAttribute("year");
         String month =(String)req.getAttribute("month");
         String day = (String)req.getAttribute("day");
-        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-        Date date = df.parse(year + "-" + month + "-" + day);
-        c.setBirthDate(date);
+        if (year != null && month != null && day != null) {
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Date date = df.parse(year + "-" + month + "-" + day);
+            c.setBirthDate(date);
+        }
         c.setGender((String)req.getAttribute("gender"));
-        c.setMarital_status((String)req.getAttribute("marital"));
-        c.setWebsite_url((String)req.getAttribute("url"));
-        c.setJob_place((String)req.getAttribute("job"));
+        c.setMaritalStatus((String)req.getAttribute("marital"));
+        c.setWebsiteUrl((String)req.getAttribute("url"));
+        c.setJobPlace((String)req.getAttribute("job"));
         c.setState((String)req.getAttribute("country"));
         c.setCity((String)req.getAttribute("city"));
-        c.setPostal_code((String)req.getAttribute("index"));
+        c.setPostalCode((String)req.getAttribute("index"));
         c.setStreet((String)req.getAttribute("street"));
-        c.setHouse_number((String)req.getAttribute("house_number"));
+        c.setHouseNumber((String)req.getAttribute("house_number"));
         c.setEmail((String)req.getAttribute(("email")));
         c.setPhoto((AttachedFile)req.getAttribute("profile_photo"));
         c.setComment((String)req.getAttribute("comment"));
@@ -133,25 +164,25 @@ public class LogicUtils {
         while(lines.next()){
             Contact c = new Contact();
             c.setId(lines.getInt("id"));
-            c.setFirst_name(lines.getString("first_name"));
-            c.setLast_name(lines.getString("last_name"));
+            c.setFirstName(lines.getString("first_name"));
+            c.setLastName(lines.getString("last_name"));
             c.setPatronymic(lines.getString("patronymic"));
-            c.setMarital_status(lines.getString("marital_status"));
+            c.setMaritalStatus(lines.getString("marital_status"));
             c.setBirthDate(lines.getDate("date_of_birth"));
             c.setState(lines.getString("state"));
             c.setGender(lines.getString("gender"));
             c.setCity(lines.getString("city"));
             c.setComment(lines.getString("comment"));
             c.setEmail(lines.getString("email"));
-            c.setHouse_number(lines.getString("house_number"));
-            c.setJob_place(lines.getString("job_place"));
+            c.setHouseNumber(lines.getString("house_number"));
+            c.setJobPlace(lines.getString("job_place"));
             AttachedFile af = new AttachedFile();
             af.setRelativePath(lines.getString("photo_url"));
             af.setRealPath(getAbsoluteOfRelative(af.getRelativePath()));
             c.setPhoto(af);
-            c.setPostal_code(lines.getString("postal_code"));
+            c.setPostalCode(lines.getString("postal_code"));
             c.setStreet(lines.getString("street"));
-            c.setWebsite_url(lines.getString("website_url"));
+            c.setWebsiteUrl(lines.getString("website_url"));
             list.add(c);
         }
         return list;
@@ -241,6 +272,7 @@ public class LogicUtils {
         ArrayList<Contact> contacts = contactDAO.getAll();
         rows = new ArrayList<>(contacts.size());
 
+        LOGGER.info(contacts);
         for (int i=0; i<contacts.size(); i++) {
             ArrayList<Phone> phones = phoneDAO.getAll(contacts.get(i).getId());
             ArrayList<AttachedFile> files = fileDAO.getAll(contacts.get(i).getId());
@@ -249,34 +281,131 @@ public class LogicUtils {
         return rows;
     }
 
-    public static <T> void initLists(Field[] fields, ArrayList<Field> notNullFields, ArrayList<Object> values, T data) throws IllegalAccessException {
-        for(int i=0; i<fields.length; i++){
-            fields[i].setAccessible(true);
-            if(fields[i].get(data) != null){
-                notNullFields.add(fields[i]);
-                values.add(fields[i].get(data));
+    public static ArrayList<Row> getLimitedRows(int from, int number) throws SQLException{
+        MysqlContactDAO contactDAO = new MysqlContactDAO();
+        MysqlFileDAO fileDAO = new MysqlFileDAO();
+        MysqlPhoneDAO phoneDAO = new MysqlPhoneDAO();
+        ArrayList<Row> rows = new ArrayList<>();
+
+        ArrayList<Contact> contacts = contactDAO.getLimitedContacts(from, number);
+        for(Contact c : contacts){
+            ArrayList<Phone> phones = phoneDAO.getLimited(from, number, c.getId());
+            ArrayList<AttachedFile> files = fileDAO.getLimited(from, number, c.getId());
+            rows.add(new Row(c, phones, files));
+        }
+        return rows;
+    }
+
+    public static <T> void initLists(Field[] fields, ArrayList<Field> notNullFields, ArrayList<Object> values, T data) {
+        try {
+            for (int i = 0; i < fields.length; i++) {
+                fields[i].setAccessible(true);
+                if (fields[i].get(data) != null && !fields[i].get(data).equals("") && !Modifier.isStatic(fields[i].getModifiers())) {
+                    notNullFields.add(fields[i]);
+                    values.add(fields[i].get(data));
+                }
+            }
+        } catch(IllegalAccessException e){
+            LOGGER.info(e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()){
+                LOGGER.info(el);
             }
         }
     }
     public static String getQuery(String sqlString, ArrayList<Field> notNullFields, ArrayList<Object> values){
 
         StringBuilder sql = new StringBuilder(sqlString);
-        String fieldName, forAppend;
-        Object fieldValue;
+        Integer fieldCount = notNullFields.size();
 
-        for(int i=0; i<notNullFields.size(); i++) {
-            fieldName = notNullFields.get(i).getName();
-            fieldValue = values.get(i);
-            if (notNullFields.get(i).getType() != int.class && notNullFields.get(i).getType() != Integer.class) {
-                forAppend = " " + fieldName + " LIKE '" + fieldValue + "%'";
-            } else {
-                forAppend = String.format(" %s = %d", fieldName, (int) fieldValue);
+        for(int i=0; i<fieldCount; i++){
+            String forAppend = " AND ";
+            Field currField = notNullFields.get(i);
+            LOGGER.info("name: " + currField.getName()  + "; " +
+                    "type: " + currField.getType() + "; value: " + values.get(i));
+            if(currField.getType() == String.class){
+                forAppend += String.format("%s LIKE ?", currField.getName());
             }
-            if (i < notNullFields.size() - 1) {
-                forAppend += " AND";
-            } else forAppend += ";";
-            sql.append(forAppend);
+            if(currField.getType() == Integer.class){
+                forAppend += String.format("%s = ?", currField.getName());
+            }
+            if(currField.getType() == java.util.Date.class){
+                if(currField.getName().equals("date_of_birth")){
+                    forAppend += String.format("%s = ?", currField.getName());
+                }
+                else continue;
+            }
+            if(!forAppend.equals(" AND "))
+                sql.append(forAppend);
         }
         return sql.toString();
+    }
+
+    public static void initStatement(PreparedStatement statement, ArrayList<Field> notNullFields,
+                                     ArrayList<Object> values) throws SQLException {
+        for(int i=0; i < notNullFields.size(); i++){
+            Field currField = notNullFields.get(i);
+            Object currValue = values.get(i);
+
+            if(currField.getType() == Integer.class){
+                statement.setInt(i+1, (Integer)currValue);
+            }
+            if(currField.getType() == String.class){
+                statement.setString(i+1, (String)currValue + "%");
+            }
+            if(currField.getType() == java.util.Date.class){
+                java.util.Date date = (java.util.Date) currValue;
+                java.sql.Date d = LogicUtils.convertJavaDateToSqlDate(date);
+                statement.setDate(i+1, d);
+            }
+        }
+    }
+
+    public static ArrayList<Contact> getContactsById(HttpServletRequest req) throws SQLException {
+        GenericDAO<Contact> contactDAO = new MysqlContactDAO();
+        ArrayList<Contact> list = new ArrayList<>();
+        String[] emails = req.getParameterValues("emails");
+        for(String emailId : emails){
+            list.add(contactDAO.find(new Contact(Integer.parseInt(emailId))).get(0));
+        }
+        return list;
+    }
+
+    public static ArrayList<Phone> getPhonesByContact(Contact contact) throws  SQLException {
+        GenericDAO<Phone> phoneDAO = new MysqlPhoneDAO();
+        return phoneDAO.find(new Phone(contact.getId()));
+    }
+
+    public static ArrayList<AttachedFile> getFilesByContact(Contact contact) throws  SQLException {
+        GenericDAO<AttachedFile> fileDAO = new MysqlFileDAO();
+        return fileDAO.find(new AttachedFile(contact.getId()));
+    }
+
+    public static void setDateRange(HttpServletRequest req, Contact c){
+        String dateFrom = req.getParameter("less_day") != null && !req.getParameter("less_day").equals("")
+                ? req.getParameter("less_day") : "01";
+        String monthFrom = req.getParameter("less_month") != null && !req.getParameter("less_month").equals("")
+                ? req.getParameter("less_month") : "01";
+        String yearFrom = req.getParameter("less_year") != null && !req.getParameter("less_year").equals("")
+                ? req.getParameter("less_year") : "1753";
+        Calendar calendar = Calendar.getInstance();
+        String dateTo = req.getParameter("more_day") != null && !req.getParameter("more_day").equals("")
+                ? req.getParameter("more_day") : String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        String monthTo = req.getParameter("more_month") != null && !req.getParameter("more_month").equals("")
+                ? req.getParameter("more_month") : String.valueOf(calendar.get(Calendar.MONTH));
+        String yearTo = req.getParameter("more_year") != null && !req.getParameter("more_year").equals("")
+                ? req.getParameter("more_year") : String.valueOf(calendar.get(Calendar.YEAR));
+
+        if(Integer.parseInt(monthTo) < 10) monthTo = "0" + monthTo;
+        c.setDateFrom(new Date(Integer.parseInt(yearFrom) - 1900, Integer.parseInt(monthFrom) - 1,
+                Integer.parseInt(dateFrom)));
+        c.setDateTo(new Date(Integer.parseInt(yearTo) - 1900, Integer.parseInt(monthTo),
+                Integer.parseInt(dateTo)));
+    }
+    public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+        return new java.sql.Date(date.getTime());
+    }
+    public static Integer getContactsNumber() throws SQLException {
+        MysqlContactDAO contactDAO = new MysqlContactDAO();
+        return contactDAO.getContactsNumber();
     }
 }

@@ -14,13 +14,35 @@ public class Contact implements Serializable {
     private String email;
     private String job_place;
     private String postal_code;
-    private Date birthDate;
+    private Date date_of_birth;
     private String state;
     private String city;
     private String street;
     private String house_number;
-    private AttachedFile photo;
+    private AttachedFile photo_url;
     private String comment;
+    private Date dateFrom;
+    private Date dateTo;
+
+    public String getFullName(){
+        return String.format("%s %s %s", last_name, first_name, patronymic);
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
 
     public Contact(){}
 
@@ -28,7 +50,7 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -36,19 +58,19 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
-    public String getFirst_name() {
+    public String getFirstName() {
         return first_name;
     }
 
-    public void setFirst_name(String first_name) {
+    public void setFirstName(String first_name) {
         this.first_name = first_name;
     }
 
-    public String getLast_name() {
+    public String getLastName() {
         return last_name;
     }
 
-    public void setLast_name(String last_name) {
+    public void setLastName(String last_name) {
         this.last_name = last_name;
     }
 
@@ -68,19 +90,19 @@ public class Contact implements Serializable {
         this.gender = gender;
     }
 
-    public String getMarital_status() {
+    public String getMaritalStatus() {
         return marital_status;
     }
 
-    public void setMarital_status(String marital_status) {
+    public void setMaritalStatus(String marital_status) {
         this.marital_status = marital_status;
     }
 
-    public String getWebsite_url() {
+    public String getWebsiteUrl() {
         return website_url;
     }
 
-    public void setWebsite_url(String website_url) {
+    public void setWebsiteUrl(String website_url) {
         this.website_url = website_url;
     }
 
@@ -92,28 +114,28 @@ public class Contact implements Serializable {
         this.email = email;
     }
 
-    public String getJob_place() {
+    public String getJobPlace() {
         return job_place;
     }
 
-    public void setJob_place(String job_place) {
+    public void setJobPlace(String job_place) {
         this.job_place = job_place;
     }
 
-    public String getPostal_code() {
+    public String getPostalCode() {
         return postal_code;
     }
 
-    public void setPostal_code(String postal_code) {
+    public void setPostalCode(String postal_code) {
         this.postal_code = postal_code;
     }
 
     public Date getBirthDate() {
-        return birthDate;
+        return date_of_birth;
     }
 
     public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+        this.date_of_birth = birthDate;
     }
 
     public String getState() {
@@ -140,20 +162,20 @@ public class Contact implements Serializable {
         this.street = street;
     }
 
-    public String getHouse_number() {
+    public String getHouseNumber() {
         return house_number;
     }
 
-    public void setHouse_number(String house_number) {
+    public void setHouseNumber(String house_number) {
         this.house_number = house_number;
     }
 
     public AttachedFile getPhoto() {
-        return photo;
+        return photo_url;
     }
 
     public void setPhoto(AttachedFile photo) {
-        this.photo = photo;
+        this.photo_url = photo;
     }
 
     public String getComment() {
@@ -166,11 +188,11 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return  "id: " + getId() + "; first_name: " + getFirst_name() + "; last_name: " + getLast_name() +
-                "; patronymic: " + getPatronymic() + " gender: " + getGender() + "; marital_status: " + getMarital_status() +
-                "; website: " + getWebsite_url() + "; email: " + getEmail() + "; job_place: " + getJob_place() +
-                "; postal: " + getPostal_code() + "; birth_date: " + getBirthDate() + "; country: " + getState()+
-                "; city: " + getCity() + "; street: " + getStreet() + "; house: " + getHouse_number() +
+        return  "id: " + getId() + "; first_name: " + getFirstName() + "; last_name: " + getLastName() +
+                "; patronymic: " + getPatronymic() + " gender: " + getGender() + "; marital_status: " + getMaritalStatus() +
+                "; website: " + getWebsiteUrl() + "; email: " + getEmail() + "; job_place: " + getJobPlace() +
+                "; postal: " + getPostalCode() + "; birth_date: " + getBirthDate() + "; country: " + getState()+
+                "; city: " + getCity() + "; street: " + getStreet() + "; house: " + getHouseNumber() +
                 "; comment: " + getComment();
     }
 }

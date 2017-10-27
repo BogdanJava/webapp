@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class Phone implements Serializable{
     private Integer id;
-    private String stateCode;
-    private String operatorCode;
+    private String state_code;
+    private String operator_code;
     private String number;
-    private String type;
+    private String phone_type;
     private String comment;
     private Integer contact_id;
 
@@ -26,19 +26,19 @@ public class Phone implements Serializable{
     }
 
     public String getStateCode() {
-        return stateCode;
+        return state_code;
     }
 
     public void setStateCode(String stateCode) {
-        this.stateCode = stateCode;
+        this.state_code = stateCode;
     }
 
     public String getOperatorCode() {
-        return operatorCode;
+        return operator_code;
     }
 
     public void setOperatorCode(String operatorCode) {
-        this.operatorCode = operatorCode;
+        this.operator_code = operatorCode;
     }
 
     public String getNumber() {
@@ -50,11 +50,11 @@ public class Phone implements Serializable{
     }
 
     public String getType() {
-        return type;
+        return phone_type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.phone_type = type;
     }
 
     public String getComment() {

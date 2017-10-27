@@ -1,7 +1,11 @@
 package com.bogdan.controllers;
 
+import com.bogdan.logic.LogicUtils;
 import com.bogdan.viewhelper.UrlMapper;
 import com.bogdan.viewhelper.StaticResourceViewHelper;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
+import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -9,9 +13,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FrontController extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger("front_logger");
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,12 +33,19 @@ public class FrontController extends HttpServlet {
         processRequest(req, resp);
     }
 
-    private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        if(isStaticResource(req.getRequestURI())){
-            processStaticResource(req, resp);
-        }
-        else{
-            processDynamicResource(req, resp);
+    private void processRequest(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            LogicUtils.initTemplates(req);
+            if (isStaticResource(req.getRequestURI())) {
+                processStaticResource(req, resp);
+            } else {
+                processDynamicResource(req, resp);
+            }
+        } catch (ServletException | IOException e) {
+            LOGGER.info(e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()){
+                LOGGER.info(el);
+            }
         }
     }
 

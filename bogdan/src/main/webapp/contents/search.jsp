@@ -3,7 +3,7 @@
 
 <div class="container">
     <h1>Поиск по критериям</h1>
-    <form method="get" action="contacts">
+    <form method="post" action="contacts">
         <h2>Личные данные</h2>
         <div class="form-group">
             <input type="text" name="first_name" id="first_name">
@@ -27,7 +27,7 @@
                         <input type="radio" name="gender" value="female"><i class="helper"></i>Женский
                     </label>
                     <label>
-                        <input type="radio" name="gender" value="none" checked><i class="helper"></i>Любой
+                        <input type="radio" name="gender" value="" checked><i class="helper"></i>Любой
                     </label>
                 </div>
                 <label class="control-label" for="gender">Пол</label>
@@ -37,11 +37,26 @@
             <select id="select" name="marital" >
                 <option value="single" selected>Не женат / не замужем</option>
                 <option value="married">Женат / замужем</option>
-                <option value="none" selected="selected">Не выбрано</option>
+                <option value="" selected="selected">Не выбрано</option>
             </select><br>
             <label class="control-label" for="select">Семейное положение</label><i class="bar"></i>
         </div>
         <h3>Дата рождения</h3>
+        <div id="less_date">
+            <h4>Младше, чем: </h4>
+            <div class="form-inline">
+                <input type="text" name="less_day" id="less_day" class="date">
+                <label class="control-label" for="less_day">День</label><i class="bar"></i>
+            </div>
+            <div class="form-inline">
+                <input type="text" name="less_month" id="less_month" class="date">
+                <label class="control-label" for="less_month">Месяц</label><i class="bar"></i>
+            </div>
+            <div class="form-inline">
+                <input type="text" name="less_year" id="less_year" class="date">
+                <label class="control-label" for="less_year">Год</label><i class="bar"></i>
+            </div>
+        </div>
         <div id="more_date">
         <h4>Старше, чем: </h4>
         <div class="form-group">
@@ -58,21 +73,6 @@
                 <label class="control-label" for="more_year">Год</label><i class="bar"></i>
             </div>
         </div>
-        </div>
-        <div id="less_date">
-        <h4>Младше, чем: </h4>
-        <div class="form-inline">
-            <input type="text" name="less_day" id="less_day" class="date">
-            <label class="control-label" for="less_day">День</label><i class="bar"></i>
-        </div>
-            <div class="form-inline">
-                <input type="text" name="less_month" id="less_month" class="date">
-                <label class="control-label" for="less_month">Месяц</label><i class="bar"></i>
-            </div>
-            <div class="form-inline">
-                <input type="text" name="less_year" id="less_year" class="date">
-                <label class="control-label" for="less_year">Год</label><i class="bar"></i>
-            </div>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">
@@ -99,6 +99,8 @@
             <input type="hidden" name="command" value="processSearchContacts">
             <input type="hidden" name="application" value="basic">
             <button id="searchButton" class="button" type="button" onclick="submitSearch()"><span>Поиск</span></button>
+            <input type="submit" id="submit" style="display: none">
         </div>
     </form>
 </div>
+<script type="text/javascript" src="js/search.js"></script>

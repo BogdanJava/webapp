@@ -89,7 +89,7 @@
                     <td class="center image-column ">Код страны</td>
                     <td class="left contact-column ">Код оператора</td>
                     <td class="left model-column ">Номер</td>
-                    <td class="left qty-column ">Тип телефона</td>"
+                    <td class="left qty-column ">Тип телефона</td>
                     <td class="left price-column ">Комментарий</td>
                 </tr>
                 </thead>

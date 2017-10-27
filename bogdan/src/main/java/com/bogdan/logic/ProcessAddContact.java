@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class ProcessAddContact implements Command{
 
     private final static Logger LOGGER = Logger.getLogger("adding_logger");
+
     private GenericDAO<Contact> contactDao = new MysqlContactDAO();
     private GenericDAO<Phone> phoneDao = new MysqlPhoneDAO();
     private GenericDAO<AttachedFile> fileDao = new MysqlFileDAO();

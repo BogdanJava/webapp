@@ -3,6 +3,7 @@ package com.bogdan.dao;
 import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Contact;
+import com.bogdan.pojo.Row;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
@@ -16,6 +17,46 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
     public MysqlContactDAO(){
     }
 
+    public Integer getContactsNumber() throws SQLException {
+        Connection conn = MysqlDAOFactory.createConnection();
+        Statement statement = conn.createStatement();
+        try {
+            String sql = "SELECT COUNT(*) total FROM contact_book";
+            ResultSet set = statement.executeQuery(sql);
+            Integer total = 0;
+            if (set.next()) {
+                total = set.getInt("total");
+            }
+            return total;
+        } finally {
+            if(conn != null) conn.close();
+            if(statement != null) statement.close();
+        }
+    }
+
+    @Override
+    public ArrayList<Contact> getLimited(int from, int number, int contactId) throws SQLException {
+        Connection conn = MysqlDAOFactory.createConnection();
+        PreparedStatement ps = null;
+        try{
+            String sql = "SELECT * FROM contact_book WHERE deleted=0 LIMIT ?, ?";
+            ps = conn.prepareStatement(sql);
+            LOGGER.info(String.format("%s, %s,%s", sql, String.valueOf(from), String.valueOf(number)));
+            ps.setInt(1, from);
+            ps.setInt(2, number);
+            ResultSet resultSet = ps.executeQuery();
+            ArrayList<Contact> contacts = LogicUtils.getContactFromResultSet(resultSet);
+            return contacts;
+        } finally {
+            if(conn != null) conn.close();
+            if(ps != null) ps.close();
+        }
+    }
+
+    public ArrayList<Contact> getLimitedContacts(int from, int number) throws SQLException {
+        return getLimited(from, number, 0);
+    }
+
     public int insert(Contact c) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
         PreparedStatement ps = null;
@@ -24,20 +65,20 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
                     + "website_url,email,job_place,postal_code,date_of_birth,state,city,street,house_number,"
                     + "photo_url,comment) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, c.getFirst_name());
-            ps.setString(2, c.getLast_name());
+            ps.setString(1, c.getFirstName());
+            ps.setString(2, c.getLastName());
             ps.setString(3, c.getPatronymic());
             ps.setString(4, c.getGender());
-            ps.setString(5, c.getMarital_status());
-            ps.setString(6, c.getWebsite_url());
+            ps.setString(5, c.getMaritalStatus());
+            ps.setString(6, c.getWebsiteUrl());
             ps.setString(7, c.getEmail());
-            ps.setString(8, c.getJob_place());
-            ps.setString(9, c.getPostal_code());
+            ps.setString(8, c.getJobPlace());
+            ps.setString(9, c.getPostalCode());
             ps.setDate(10, new java.sql.Date(c.getBirthDate().getTime()));
             ps.setString(11, c.getState());
             ps.setString(12, c.getCity());
             ps.setString(13, c.getStreet());
-            ps.setString(14, c.getHouse_number());
+            ps.setString(14, c.getHouseNumber());
             String path;
             if(c.getPhoto() != null){
                 path = c.getPhoto().getRelativePath();
@@ -85,48 +126,29 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
 
     public ArrayList<Contact> find(Contact data) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
-        StringBuilder sql = new StringBuilder("SELECT * FROM contact_book WHERE deleted=0 AND");
-        Statement statement = conn.createStatement();
+        String sql = "SELECT * FROM contact_book WHERE deleted=0";
+        PreparedStatement statement = null;
         ArrayList<Contact> list = null;
         ArrayList<Field> notNullFields = new ArrayList<>();
         ArrayList<Object> values = new ArrayList<>();
         try {
             Field[] fields =  Contact.class.getDeclaredFields();
             LogicUtils.initLists(fields, notNullFields, values, data);
-            String forAppend;
-            String fieldName;
-            Object fieldValue;
-            for(int i=0; i<notNullFields.size(); i++) {
-                fieldName = notNullFields.get(i).getName();
-                fieldValue = values.get(i);
-                if (notNullFields.get(i).getType() != int.class && notNullFields.get(i).getType() != Integer.class) {
-                    if (notNullFields.get(i).getType() == AttachedFile.class) {
-                        fieldName = "photo_url";
-                        AttachedFile photo = (AttachedFile) fieldValue;
-                        fieldValue = photo.getRelativePath();
-                    }
-                    forAppend = " " + fieldName + " LIKE '" + fieldValue + "%'";
-                } else {
-                    forAppend = String.format(" %s = %d", fieldName, (int) fieldValue);
-                }
-                if (i < notNullFields.size() - 1) {
-                    forAppend += " AND";
-                } else forAppend += ";";
-                sql.append(forAppend);
-            }
+            String dateRange = " AND date_of_birth >=? AND date_of_birth <=?";
+            String query = LogicUtils.getQuery(sql, notNullFields, values);
+            if(data.getDateFrom() != null)
+            query += dateRange;
 
-            LOGGER.info(sql.toString());
-            ResultSet set = statement.executeQuery(sql.toString());
+            LOGGER.info(query);
+            statement = conn.prepareStatement(query);
+            LogicUtils.initStatement(statement, notNullFields, values);
+            ResultSet set = statement.executeQuery();
             list =  LogicUtils.getContactFromResultSet(set);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } finally {
             if(statement != null) statement.close();
             if(conn != null) conn.close();
         }
-
-        if(list.size() != 0) return list;
-        else return null;
+        return list;
     }
 
     public ArrayList<Contact> getAll() throws SQLException{
@@ -160,20 +182,20 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
                     +"city=?,street=?,house_number=?,photo_url=?,comment=? WHERE id = ?";
             ps = conn.prepareStatement(sql);
 
-            ps.setString(1, c.getFirst_name());
-            ps.setString(2, c.getLast_name());
+            ps.setString(1, c.getFirstName());
+            ps.setString(2, c.getLastName());
             ps.setString(3, c.getPatronymic());
             ps.setString(4, c.getGender());
-            ps.setString(5, c.getMarital_status());
-            ps.setString(6, c.getWebsite_url());
+            ps.setString(5, c.getMaritalStatus());
+            ps.setString(6, c.getWebsiteUrl());
             ps.setString(7, c.getEmail());
-            ps.setString(8, c.getJob_place());
-            ps.setString(9, c.getPostal_code());
+            ps.setString(8, c.getJobPlace());
+            ps.setString(9, c.getPostalCode());
             ps.setDate(10, new java.sql.Date(c.getBirthDate().getTime()));
             ps.setString(11, c.getState());
             ps.setString(12, c.getCity());
             ps.setString(13, c.getStreet());
-            ps.setString(14, c.getHouse_number());
+            ps.setString(14, c.getHouseNumber());
             String path;
             if(c.getPhoto() != null){
                 path = c.getPhoto().getRelativePath();
