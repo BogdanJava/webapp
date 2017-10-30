@@ -15,6 +15,8 @@ public abstract class AbstractTemplate {
         attributes = map;
     }
 
+    AbstractTemplate(){}
+
     public AbstractTemplate(ServletContext context){
         this.context = context;
     }
@@ -27,5 +29,17 @@ public abstract class AbstractTemplate {
         }
     }
 
+    public abstract String getSample();
+
     public abstract String getHtml();
+
+    public abstract String getSubject();
+
+    public static String getTemplateValue(String templateName){
+        switch (templateName){
+            case "adv" : return new AdvTemplate().getSample();
+            case "birthday" : return new BirthdayTemplate().getSample();
+            default: return null;
+        }
+    }
 }

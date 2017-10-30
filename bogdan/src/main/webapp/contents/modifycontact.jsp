@@ -6,21 +6,21 @@
 <link rel="stylesheet" type="text/css" href="css/modal.css"/>
 <script src="js/birthdaySelect.js" type="text/javascript"></script>
 
-<div class="container">`
+<div class="container">
     <form method="POST" action="contacts" enctype="multipart/form-data">
         <h1>Изменение: контакт №${contact.id}</h1><br>
         <input type="hidden" name="editContactId" value="${contact.id}">
         <h2>Личные данные</h2>
         <div class="form-group">
-            <input type="text" name="first_name" id="first_name" value="${contact.firstName}" required autofocus>
+            <input type="text" name="first_name" pattern="^[a-zA-Zа-яА-Я]+$" id="first_name" value="${contact.firstName}" required autofocus>
             <label class="control-label" for="first_name">Имя</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="last_name" id="last_name" value="${contact.lastName}" required>
+            <input type="text" name="last_name" pattern="^[a-zA-Zа-яА-Я]+$" id="last_name" value="${contact.lastName}" required>
             <label class="control-label" for="last_name">Фамилия</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="patronymic" value="${contact.patronymic}" id="patronymic">
+            <input type="text" name="patronymic" pattern="^[a-zA-Zа-яА-Я]+$" value="${contact.patronymic}" id="patronymic">
             <label class="control-label" for="patronymic">Отчество</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -70,32 +70,32 @@
             <label class="control-label" for="select">Семейное положение</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="url" id="url" value="${contact.websiteUrl}">
+            <input type="url" name="url" id="url" value="${contact.websiteUrl}">
             <label class="control-label" for="url">Личный сайт</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="job" name="job" value="${contact.jobPlace}">
+            <input type="text" id="job" pattern="^[a-zA-Zа-яА-Я]+$" name="job" value="${contact.jobPlace}">
             <label class="control-label" for="job">Место работы</label><i class="bar"></i>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">
-            <input type="text" id="country" name="country" value="${contact.state}">
+            <input type="text" id="country" pattern="^[a-zA-Zа-яА-Я]+$" name="country" value="${contact.state}">
             <label class="control-label" for="country">Страна</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="index" name="index" value="${contact.postalCode}">
+            <input type="text" id="index" pattern="[0-9]{6}"name="index" value="${contact.postalCode}">
             <label class="control-label" for="index">Индекс</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="city" name="city" value="${contact.city}">
+            <input type="text" id="city" pattern="^[a-zA-Zа-яА-Я]+$" name="city" value="${contact.city}">
             <label class="control-label" for="city">Город</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="street" name="street" value="${contact.street}">
+            <input type="text" id="street" pattern="^[a-zA-Zа-яА-Я]+$" name="street" value="${contact.street}">
             <label class="control-label" for="street">Улица</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="house_number" name="house_number" value="${contact.houseNumber}">
+            <input type="text" id="house_number" pattern="^[0-9]+$" name="house_number" value="${contact.houseNumber}">
             <label class="control-label" for="house_number">Дом</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -146,9 +146,10 @@
             <table class="list" id="fileTable">
                 <thead>
                 <tr>
-                    <td width="1" style="text-align: center;"></td>
+                    <td width="1" style="text-align: center;width:25px;"></td>
                     <td class="center image-column ">Имя</td>
                     <td class="left contact-column ">Комментарий</td>
+                    <td class="right contact-column ">Дата загрузки</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -157,10 +158,12 @@
                         <td style="text-align: center;"><input type="checkbox" name="f_checkBox" /></td>
                         <td class="center contact-image image-column "><c:out value="${curr.name}"/></td>
                         <td class="left contact-name contact-column"><c:out value="${curr.description}"/></td>
+                        <td class="right contact-name contact-column"><c:out value="${curr.date}"/></td>
                         <input type="hidden" name="t_fid" value="${curr.id}"/>
                         <input type="hidden" name="t_fname" value="${curr.name}"/>
                         <input type="hidden" name="t_frealname" value="${curr.name}${curr.type}"/>
                         <input type="hidden" name="t_fcomment" value="${curr.description}"/>
+                        <input type="hidden" name="t_fdate" value="${curr.date}"/>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -174,6 +177,11 @@
         <br><br><br>
         <h2>Фото профиля</h2>
 
+        <output>
+            <div id="list" class="image-wrapper">
+                <img id="imgTag" height="150" width="150" src="<c:out value="${contact.photo.relativePath}"/>">
+            </div>
+        </output>
         <div class="form-group gend file_upload" id="photoDiv">
             <button id="file_btn" type="button" onclick="document.getElementById('upload_hidden').click();" class="button" style="Margin: 0;"><span>Обзор</span></button>
             <div id="file-name">Файл не выбран</div>
@@ -182,11 +190,6 @@
 				document.getElementById('file-name').innerHTML = this.value.slice(12);" type="file">
             <input id="upload_visible" onclick="document.getElementById('upload_hidden').click();" style="height: 0;" type="text" value="${contact.photo.name}${contact.photo.type}">
             <label class="control-label" for="file_btn">Фото</label><i class="bar"></i>
-            <output>
-                <div id="list" class="image-wrapper">
-                    <img id="imgTag" height="150" width="150" src="<c:out value="${contact.photo.relativePath}"/>">
-                </div>
-            </output>
         </div>
         <div class="form-group">
             <textarea id="comment" rows=1 name="comment"><c:out value="${contact.comment}"/></textarea>
@@ -206,10 +209,10 @@
                     <span class="close">&times;</span>
                     <h2>Прикрепить файл</h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="width: 400px">
                     <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;" id="fileContainer">
                         <div class="form-group">
-                            <input type="text" id="fname" name="fname"/>
+                            <input type="text" pattern="^[a-zA-Z0-9]+$" id="fname" name="fname"/>
                             <label class="control-label" for="fname" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Имя файла<i class="bar"></i></label>
                         </div>
                         <div class="form-group">
@@ -240,15 +243,15 @@
             <span class="close">&times;</span>
             <h2>Добавить новый телефон</h2>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="width: 400px">
             <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;">
                 <div class="form-group">
                     <label class="control-label" for="country_code" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Код страны</label>
-                    <input type="text" style="width: 29%; display: inline" id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
+                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]+$" id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
                     <label class="control-label" for="operator_code" style="left:auto";>Код оператора</label>
-                    <input type="text" style="width: 29%; display: inline;" id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
+                    <input type="text" style="width: 29%; display: inline;" pattern = "^[0-9]+$" id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
                     <label class="control-label" for="number" style="left:auto">Номер телефона</label>
-                    <input type="text" style="width: 29%; display: inline" id="number" name="number" class="onephone" style="width:59%">
+                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]+$" id="number" name="number" class="onephone" style="width:59%">
                 </div>
                 <div class="form-group">
                     <select id="phone_type" name="phone_type">

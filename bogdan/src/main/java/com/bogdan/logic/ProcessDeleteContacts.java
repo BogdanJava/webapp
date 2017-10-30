@@ -28,11 +28,16 @@ public class ProcessDeleteContacts implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         Integer[] deletedContactsId = null;
-        if(req.getAttribute("toDelete") instanceof String[]) {
-            deletedContactsId = LogicUtils.parseStringToInt((String[]) req.getAttribute("toDelete"));
+        Object toDeleteAttribute = req.getAttribute("toDelete");
+        if(toDeleteAttribute != null) {
+            if (toDeleteAttribute instanceof String[]) {
+                deletedContactsId = LogicUtils.parseStringToInt((String[]) toDeleteAttribute);
+            } else {
+                deletedContactsId = new Integer[1];
+                deletedContactsId[0] = Integer.parseInt((String) toDeleteAttribute);
+            }
         } else {
-            deletedContactsId = new Integer[1];
-            deletedContactsId[0] = Integer.parseInt((String)req.getAttribute("toDelete"));
+            deletedContactsId = new Integer[]{};
         }
         try {
             for (int contactId : deletedContactsId) {

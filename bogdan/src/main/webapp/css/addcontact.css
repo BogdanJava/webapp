@@ -5,33 +5,21 @@ input,
 select,
 textarea,
 body * {
-    font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
-}
-
-body::after, body::before,
-input::after,
-input::before,
-select::after,
-select::before,
-textarea::after,
-textarea::before,
-body *::after,
-body *::before {
-    box-sizing: border-box;
+    font: 14px Verdana, Geneva, sans-serif;
 }
 
 body {
     background-image: linear-gradient(top, #f2f2f2, #e6e6e6);
+    margin: 0;
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
     margin: 0;
 }
 h2 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     text-align: center;
     margin: 0;
     font-weight: normal;
@@ -43,7 +31,7 @@ h3 {
     font-weight: normal;
 }
 h4 {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     text-align: center;
     margin: 0;
     font-weight: normal;
@@ -52,10 +40,10 @@ h4 {
 .container {
     position: relative;
     max-width: 40rem;
-    margin: 5rem auto;
+    margin: 0 auto;
     background: #fff;
     width: 100%;
-    padding: 3rem 5rem 0;
+    padding: 1rem 5rem 0;
     border-radius: 1px;
 }
 
@@ -66,7 +54,6 @@ h4 {
     left: 0;
     right: 0;
     bottom: 0;
-    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
     transform: scale(0.98);
     transition: transform 0.28s ease-in-out;
     z-index: -1;
@@ -473,4 +460,17 @@ border-bottom: 1px solid #999 !important;
 display: inline-block !important;
 border-bottom: 1px solid #999 !important;	
 top: -1.2rem;
+}
+
+.thin {
+    width: 32.8%;
+    display: inline-block;
+}
+
+#phoneTable, #fileTable {
+    width:100%;
+}
+
+#phoneTable thead td, #fileTable thead td {
+    font-weight: 600;
 }

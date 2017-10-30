@@ -2,6 +2,7 @@ package com.bogdan.dao;
 
 import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.AttachedFile;
+import com.bogdan.pojo.Limit;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
@@ -16,8 +17,8 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
         Connection conn = MysqlDAOFactory.createConnection();
         PreparedStatement ps = null;
         try {
-            String sql = "INSERT INTO attached_files (relative_path,description,contact_id,real_path, name, file_type)"
-                    +" VALUES (?,?,?,?,?,?);";
+            String sql = "INSERT INTO attached_files (relative_path,description,contact_id,real_path, name, " +
+                    "file_type, add_date) VALUES (?,?,?,?,?,?,?);";
             ps = conn.prepareStatement(sql);
             ps.setString(1, file.getRelativePath());
             ps.setString(2, file.getDescription());
@@ -25,6 +26,7 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
             ps.setString(4, file.getRealPath());
             ps.setString(5, file.getName());
             ps.setString(6, file.getType());
+            ps.setDate(7, new java.sql.Date(file.getDate().getTime()));
 
             ps.execute();
             return 1;
@@ -75,7 +77,7 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
         }
     }
 
-    public ArrayList<AttachedFile> find(AttachedFile data) throws SQLException {
+    public ArrayList<AttachedFile> find(AttachedFile data, Limit limit) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
         String sql = "SELECT * FROM attached_files WHERE deleted=0";
         PreparedStatement statement = null;

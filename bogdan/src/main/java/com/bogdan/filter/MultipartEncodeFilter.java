@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
         List<String> fileComments = new ArrayList<>();
         List<String> deletedFiles = new ArrayList<>();
         List<String> deletedPhones = new ArrayList<>();
+        List<String> fileDates = new ArrayList<>();
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(1024 * 1024);
@@ -100,6 +102,9 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
                         case "t_frealname":
                             fileRealNames.add(item.getString());
                             break;
+                        case "t_fdate":
+                            fileDates.add(item.getString());
+                            break;
                         default:
                             servletRequest.setAttribute(item.getFieldName(), item.getString());
                     }
@@ -123,6 +128,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
             thisFile.setType(LogicUtils.getFileType(fileRealNames.get(i)));
             thisFile.setName(fileNames.get(i));
             thisFile.setDescription(fileComments.get(i));
+            thisFile.setDate(fileDates.get(i).equals("") ? new Date() : new Date(fileDates.get(i)));
         }
         LOGGER.info(fileRealNames);
         LOGGER.info("Phone list: " + phoneList);

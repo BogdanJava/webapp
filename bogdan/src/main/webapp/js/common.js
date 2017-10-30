@@ -199,6 +199,12 @@ function submitFileAdd(){
     newNode.setAttribute("type", "hidden");
     newNode.setAttribute("name", "t_fid");
     newNode.setAttribute("value", "-1");
+    checkbox.parentNode.appendChild(newNode);
+    newNode = document.createElement("input");
+    newNode.setAttribute("type", "hidden");
+    newNode.setAttribute("name", "t_fdate");
+    newNode.setAttribute("value", "");
+    checkbox.parentNode.appendChild(newNode);
 
     modal.style.display = "none";
 }

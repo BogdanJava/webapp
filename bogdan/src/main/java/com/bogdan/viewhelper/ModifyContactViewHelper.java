@@ -31,9 +31,9 @@ public class ModifyContactViewHelper implements Command {
         ArrayList<AttachedFile> files = null;
         try{
             contactId = Integer.parseInt(req.getParameter("id"));
-            contact = contactDAO.find(new Contact(contactId)).get(0);
-            phones = phoneDAO.find(new Phone(contactId));
-            files = fileDAO.find(new AttachedFile(contactId));
+            contact = contactDAO.find(new Contact(contactId),null).get(0);
+            phones = phoneDAO.find(new Phone(contactId),null);
+            files = fileDAO.find(new AttachedFile(contactId),null);
 
         } catch(NumberFormatException e){
             new AddContactPageViewHelper().execute(req, res);

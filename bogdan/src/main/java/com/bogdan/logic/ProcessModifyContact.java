@@ -40,11 +40,12 @@ public class ProcessModifyContact implements Command {
         try {
             Integer contactId = Integer.parseInt((String)req.getAttribute("editContactId"));
             Contact contact = LogicUtils.initContact(req);
+            LOGGER.info("Contact to edit: " + contact.getBirthDate());
             contact.setId(contactId);
             ArrayList<Phone> phones = LogicUtils.initPhones(req, contactId);
             ArrayList<AttachedFile> files = LogicUtils.initFiles(req, contactId);
             if(!LogicUtils.createFile(contact, contact.getPhoto())) {
-                AttachedFile oldPhoto = contactDAO.find(new Contact(contactId)).get(0).getPhoto();
+                AttachedFile oldPhoto = contactDAO.find(new Contact(contactId),null).get(0).getPhoto();
                 if(new File(LogicUtils.getAbsoluteOfRelative(oldPhoto.getRelativePath())).exists())
                     contact.setPhoto(oldPhoto);
                 else contact.setPhoto(null);

@@ -1,6 +1,7 @@
 package com.bogdan.dao;
 
 import com.bogdan.logic.LogicUtils;
+import com.bogdan.pojo.Limit;
 import com.bogdan.pojo.Phone;
 import org.apache.log4j.Logger;
 
@@ -77,7 +78,7 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
         }
     }
 
-    public ArrayList<Phone> find(Phone data) throws SQLException {
+    public ArrayList<Phone> find(Phone data,Limit limit) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
         String sql = "SELECT * FROM phone_book WHERE deleted=0";
         PreparedStatement statement = null;

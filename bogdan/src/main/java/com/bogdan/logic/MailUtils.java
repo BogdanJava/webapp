@@ -33,6 +33,34 @@ public class MailUtils {
         return propertyValue;
     }
 
+    public static ArrayList<Contact> getContactsByEmails(String[] emails) throws SQLException {
+        MysqlContactDAO contactDAO = new MysqlContactDAO();
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for(String email : emails){
+            LOGGER.info("EMAIL: " + email);
+            Contact criteria = new Contact();
+            criteria.setEmail(email);
+            Contact contact = contactDAO.find(criteria, null).get(0);
+            if(contact != null) contacts.add(contact);
+        }
+        return contacts;
+    }
+
+    public static void sendEmail(ArrayList<Contact> contacts, AbstractTemplate template) throws EmailException {
+        for(Contact contact : contacts) {
+            Email email = MailUtils.getStandardEmail();
+            email.addTo(contact.getEmail());
+            email.setSubject(template.getSubject());
+            Map<String, String> attributes = new HashMap<>();
+            attributes.put("username", contact.getFullName());
+            attributes.put("respath", MailUtils.getProperty("respath"));
+            attributes.put("from", MailUtils.getProperty("username"));
+            template.setAttributes(attributes);
+            email.setMsg(template.getHtml());
+            email.send();
+        }
+    }
+
     public static void sendEmail(Integer[] ids, StringTemplate template, String topic, String message,
                                  ServletContext context) throws SQLException, EmailException {
             if (template != null) {
@@ -47,7 +75,7 @@ public class MailUtils {
         GenericDAO<Contact> contactDAO = new MysqlContactDAO();
         ArrayList<Contact> contacts = new ArrayList<>();
         for(Integer id : ids){
-            contacts.add(contactDAO.find(new Contact(id)).get(0));
+            contacts.add(contactDAO.find(new Contact(id), null).get(0));
         }
 
         for(Contact contact : contacts){
@@ -59,7 +87,7 @@ public class MailUtils {
             switch (t.getName()){
                 case "adv": {
                     attributes.put("username", contact.getFullName());
-                    attributes.put("respath", "https://vk.com/id74422070");
+                    attributes.put("respath", MailUtils.getProperty("respath"));
                     break;
                 }
                 case "birthday": {
@@ -72,7 +100,6 @@ public class MailUtils {
             email.setMsg(template.getHtml());
             LOGGER.info(template.getHtml());
             email.send();
-            System.runFinalization();
         }
     }
 
@@ -80,7 +107,7 @@ public class MailUtils {
         GenericDAO<Contact> contactDAO = new MysqlContactDAO();
         Set<String> emails = new HashSet<>();
         for(Integer id : ids){
-            emails.add(contactDAO.find(new Contact(id)).get(0).getEmail());
+            emails.add(contactDAO.find(new Contact(id), null).get(0).getEmail());
         }
         Email email = MailUtils.getStandardEmail();
         email.setCharset("utf-8");
@@ -102,4 +129,5 @@ public class MailUtils {
         email.setFrom(MailUtils.getProperty("username"));
         return email;
     }
+
 }

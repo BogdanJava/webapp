@@ -15,4 +15,10 @@
         <function-class>com.bogdan.logic.LogicUtils</function-class>
         <function-signature>java.lang.String getTemplateName(java.lang.String)</function-signature>
     </function>
+
+    <function>
+        <name>getTemplateSample</name>
+        <function-class>com.bogdan.templates.AbstractTemplate</function-class>
+        <function-signature>java.lang.String getTemplateValue(java.lang.String)</function-signature>
+    </function>
 </taglib>

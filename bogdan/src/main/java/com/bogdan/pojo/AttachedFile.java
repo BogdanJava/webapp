@@ -2,6 +2,7 @@ package com.bogdan.pojo;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
 
 public class AttachedFile implements Serializable {
 
@@ -18,8 +19,17 @@ public class AttachedFile implements Serializable {
     private Integer contact_id;
     private Byte[] bytes;
     private String file_type;
+    private Date add_date;
 
     public AttachedFile(){}
+
+    public Date getDate() {
+        return add_date;
+    }
+
+    public void setDate(Date add_date) {
+        this.add_date = add_date;
+    }
 
     public AttachedFile(Integer contact_id){
         this.contact_id = contact_id;

@@ -1,5 +1,27 @@
 window.onload = function () {
     var page = Number(getParameterByName("page"));
+    var prevButton = document.getElementById("prevButton");
+    var nextButton = document.getElementById("nextButton");
+    var maxpage = Number(document.getElementById("maxpage").value);
+    var hasCriteria = document.getElementById("filters").value;
+    var criteriaForm = document.getElementById("criteriaForm");
+
+    if(hasCriteria == "yes"){
+        criteriaForm.style.display = "block";
+    }
+    else criteriaForm.style.display = "none";
+
+    if(page <= 1){
+        prevButton.disabled = true;
+    }
+    else {
+        prevButton.disabled = false;
+    }
+    if(page == maxpage){
+        nextButton.disabled = true;
+    } else{
+        nextButton.disabled = false;
+    }
 
 }
 

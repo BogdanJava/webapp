@@ -3,12 +3,15 @@ package com.bogdan.dao;
 import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Contact;
+import com.bogdan.pojo.Limit;
 import com.bogdan.pojo.Row;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MysqlContactDAO implements GenericDAO<Contact> {
 
@@ -17,21 +20,54 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
     public MysqlContactDAO(){
     }
 
-    public Integer getContactsNumber() throws SQLException {
+    public ArrayList<Contact> getBirthdays(Contact contact) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
-        Statement statement = conn.createStatement();
+        String sql = "SELECT * FROM contact_book WHERE deleted=0 AND date_format(date_of_birth, \'%d%m\') = ?";
+        String toInsert = null;
+        PreparedStatement statement = null;
+        ArrayList<Contact> contacts = null;
         try {
-            String sql = "SELECT COUNT(*) total FROM contact_book";
-            ResultSet set = statement.executeQuery(sql);
-            Integer total = 0;
-            if (set.next()) {
-                total = set.getInt("total");
-            }
-            return total;
+            statement = conn.prepareStatement(sql);
+            toInsert = String.format("%d%d", contact.getBirthDate().getDate(), contact.getBirthDate().getMonth() + 1);
+            LOGGER.info(toInsert);
+            statement.setString(1, toInsert);
+            contacts = LogicUtils.getContactFromResultSet(statement.executeQuery());
         } finally {
             if(conn != null) conn.close();
             if(statement != null) statement.close();
         }
+        return contacts;
+    }
+
+    public Integer getContactsNumber(Contact data) throws SQLException {
+        if(data == null){
+            data = new Contact();
+        }
+        Connection conn = MysqlDAOFactory.createConnection();
+        String sql = "SELECT COUNT(*) total FROM contact_book WHERE deleted=0";
+        PreparedStatement statement = null;
+        Integer count = 0;
+        ArrayList<Field> notNullFields = new ArrayList<>();
+        ArrayList<Object> values = new ArrayList<>();
+        try {
+            Field[] fields =  Contact.class.getDeclaredFields();
+            LogicUtils.initLists(fields, notNullFields, values, data);
+            String dateRange = " AND date_of_birth >=? AND date_of_birth <=?";
+            String query = LogicUtils.getQuery(sql, notNullFields, values);
+            if(data.getDateFrom() != null)
+                query += dateRange;
+
+            LOGGER.info(query);
+            statement = conn.prepareStatement(query);
+            LogicUtils.initStatement(statement, notNullFields, values);
+            ResultSet set = statement.executeQuery();
+            if(set.next())
+            count = set.getInt("total");
+        } finally {
+            if(statement != null) statement.close();
+            if(conn != null) conn.close();
+        }
+        return count;
     }
 
     @Override
@@ -124,7 +160,7 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
         }
     }
 
-    public ArrayList<Contact> find(Contact data) throws SQLException {
+    public ArrayList<Contact> find(Contact data, Limit limit) throws SQLException {
         Connection conn = MysqlDAOFactory.createConnection();
         String sql = "SELECT * FROM contact_book WHERE deleted=0";
         PreparedStatement statement = null;
@@ -139,6 +175,7 @@ public class MysqlContactDAO implements GenericDAO<Contact> {
             if(data.getDateFrom() != null)
             query += dateRange;
 
+            if(limit != null) query += limit.toString();
             LOGGER.info(query);
             statement = conn.prepareStatement(query);
             LogicUtils.initStatement(statement, notNullFields, values);

@@ -1,3 +1,6 @@
+body{
+    margin: 0;
+}
 footer{
     background-color: #2F96B4;
 }
@@ -11,7 +14,7 @@ footer p{
 }
 
 header{
-    background-color: #5391b8;
+    background-color: #507299;
 }
 
 ul{
@@ -24,17 +27,19 @@ ul li.helper {
     visibility: hidden;
 }
 .nav li {
-    background: #2728e7;
     width: 98px;
-    height: 98px;
+    height: 30px;
     display: inline-block;
-    text-align: left;
-    border: 1px solid #000;
+    text-align: center;
+    padding-top: 10px;
+    color: #d7e2ec;
 }
-ul.nav a {
 
+a:-webkit-any-link {
+    color: unset;
+    text-decoration: none;
 }
-ul.nav a:hover{
-    background-color: #333;
-    color: #f4f4f4;
+
+.nav li:hover {
+    background-color: #486991;
 }

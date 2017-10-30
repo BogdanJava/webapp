@@ -42,37 +42,29 @@
             <label class="control-label" for="select">Семейное положение</label><i class="bar"></i>
         </div>
         <h3>Дата рождения</h3>
-        <div id="less_date">
-            <h4>Младше, чем: </h4>
-            <div class="form-inline">
-                <input type="text" name="less_day" id="less_day" class="date">
-                <label class="control-label" for="less_day">День</label><i class="bar"></i>
-            </div>
-            <div class="form-inline">
-                <input type="text" name="less_month" id="less_month" class="date">
-                <label class="control-label" for="less_month">Месяц</label><i class="bar"></i>
-            </div>
-            <div class="form-inline">
-                <input type="text" name="less_year" id="less_year" class="date">
-                <label class="control-label" for="less_year">Год</label><i class="bar"></i>
-            </div>
+        <h4>От: </h4>
+        <div class="form-group" id="less_date">
+            <div class="thin"> <label class="control-label" for="less_day" style="font-size: 0.8rem;color: gray;top: -1.2rem;">День</label>
+                <input type="text" name="less_day" id="less_day">
+                <i class="bar"></i></div>
+            <div class="thin"> <label class="control-label" for="less_month" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Месяц</label>
+                <input type="text" name="less_month" id="less_month">
+                <i class="bar"></i></div>
+            <div class="thin"> <label class="control-label" for="less_year" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Год</label>
+                <input type="text" name="less_year" id="less_year">
+                <i class="bar"></i></div>
         </div>
-        <div id="more_date">
-        <h4>Старше, чем: </h4>
-        <div class="form-group">
-            <div class="form-inline">
-                <input type="text" name="more_day" id="more_day" class="date">
-                <label class="control-label" for="more_day">День</label><i class="bar"></i>
-            </div>
-            <div class="form-inline">
-                <input type="text" name="more_month" id="more_month" class="date">
-                <label class="control-label" for="more_month">Месяц</label><i class="bar"></i>
-            </div>
-            <div class="form-inline">
-                <input type="text" name="more_year" id="more_year" class="date">
-                <label class="control-label" for="more_year">Год</label><i class="bar"></i>
-            </div>
-        </div>
+        <h4>До: </h4>
+        <div class="form-group" id="more_date">
+            <div class="thin"> <label class="control-label" for="more_day" style="font-size: 0.8rem;color: gray;top: -1.2rem;">День</label>
+                <input type="text" name="more_day" id="more_day">
+                <i class="bar"></i></div>
+            <div class="thin"> <label class="control-label" for="more_month" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Месяц</label>
+                <input type="text" name="more_month" id="more_month">
+                <i class="bar"></i></div>
+            <div class="thin"> <label class="control-label" for="more_year" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Год</label>
+                <input type="text" name="more_year" id="more_year">
+                <i class="bar"></i></div>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">

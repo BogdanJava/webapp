@@ -31,17 +31,17 @@ public class ProcessSearchContacts implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        Contact contact;
+        Contact contact = null;
         ArrayList<Row> rows = null;
         try {
             contact = LogicUtils.initContact(req);
             LogicUtils.setDateRange(req, contact);
-            ArrayList<Contact> contacts = contactDao.find(contact);
+            ArrayList<Contact> contacts = contactDao.find(contact,null);
             rows = new ArrayList<>();
             if(contacts != null)
             for(int i=0; i<contacts.size(); i++){
-                ArrayList<Phone> phones = phoneDao.find(new Phone(contacts.get(i).getId()));
-                ArrayList<AttachedFile> files = fileDao.find(new AttachedFile(contacts.get(i).getId()));
+                ArrayList<Phone> phones = phoneDao.find(new Phone(contacts.get(i).getId()),null);
+                ArrayList<AttachedFile> files = fileDao.find(new AttachedFile(contacts.get(i).getId()),null);
                 rows.add(new Row(contacts.get(i), phones, files));
             }
         } catch (ParseException | SQLException e) {
@@ -50,6 +50,7 @@ public class ProcessSearchContacts implements Command {
                 LOGGER.info(el);
             }
         }
+        req.getSession().setAttribute("criteria", contact);
         req.setAttribute("rows", rows);
         new ShowContactsViewHelper().execute(req, res);
     }

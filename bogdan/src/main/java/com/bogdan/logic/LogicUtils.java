@@ -4,16 +4,14 @@ import com.bogdan.dao.GenericDAO;
 import com.bogdan.dao.MysqlContactDAO;
 import com.bogdan.dao.MysqlFileDAO;
 import com.bogdan.dao.MysqlPhoneDAO;
-import com.bogdan.pojo.AttachedFile;
-import com.bogdan.pojo.Contact;
-import com.bogdan.pojo.Phone;
-import com.bogdan.pojo.Row;
+import com.bogdan.pojo.*;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,16 +35,16 @@ public class LogicUtils {
         }
     }
 
-    public static void initTemplates(HttpServletRequest req){
-        if(req.getServletContext().getAttribute("templates") == null) {
+    public static void initTemplates(ServletContext context){
+        if(context.getAttribute("templates") == null) {
             StringTemplateGroup stGroup = new StringTemplateGroup("group",
-                    LogicUtils.getAbsoluteOfRelative(req.getServletContext().getContextPath()) +
+                    LogicUtils.getAbsoluteOfRelative(context.getContextPath()) +
                             "\\mailtemplates", DefaultTemplateLexer.class);
 
             ArrayList<StringTemplate> templates = new ArrayList<>();
             templates.add(stGroup.getInstanceOf("adv"));
             templates.add(stGroup.getInstanceOf("birthday"));
-            req.getServletContext().setAttribute("templates", templates);
+            context.setAttribute("templates", templates);
         }
     }
 
@@ -112,9 +110,21 @@ public class LogicUtils {
         if(files != null) {
             for (AttachedFile file : files) {
                 file.setContactId(contactId);
+                file.setDate(new Date());
             }
             return files;
         } else return null;
+    }
+
+    public static ArrayList<Contact> getTodayBirthdayMan(Contact contact){
+        MysqlContactDAO contactDao = new MysqlContactDAO();
+        ArrayList<Contact> contacts = null;
+        try {
+            contacts = contactDao.getBirthdays(contact);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contacts;
     }
 
     public static ArrayList<Phone> initPhones(HttpServletRequest req, int contactId){
@@ -138,10 +148,11 @@ public class LogicUtils {
         String month =(String)req.getAttribute("month");
         String day = (String)req.getAttribute("day");
         if (year != null && month != null && day != null) {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date date = df.parse(year + "-" + month + "-" + day);
             c.setBirthDate(date);
         }
+        LOGGER.info(c.getBirthDate());
         c.setGender((String)req.getAttribute("gender"));
         c.setMaritalStatus((String)req.getAttribute("marital"));
         c.setWebsiteUrl((String)req.getAttribute("url"));
@@ -219,6 +230,7 @@ public class LogicUtils {
             file.setName(lines.getString("name"));
             file.setContactId(lines.getInt("contact_id"));
             file.setType(lines.getString("file_type"));
+            file.setDate(lines.getDate("add_date"));
             list.add(file);
         }
         if(list.size() > 0){
@@ -277,6 +289,21 @@ public class LogicUtils {
             ArrayList<Phone> phones = phoneDAO.getAll(contacts.get(i).getId());
             ArrayList<AttachedFile> files = fileDAO.getAll(contacts.get(i).getId());
             rows.add(new Row(contacts.get(i), phones, files));
+        }
+        return rows;
+    }
+
+    public static ArrayList<Row> search(Contact criteria, Limit limit) throws SQLException {
+        MysqlContactDAO contactDAO = new MysqlContactDAO();
+        MysqlFileDAO fileDAO = new MysqlFileDAO();
+        MysqlPhoneDAO phoneDAO = new MysqlPhoneDAO();
+        ArrayList<Row> rows = new ArrayList<>();
+
+        ArrayList<Contact> contacts = contactDAO.find(criteria, limit);
+        for(Contact c : contacts){
+            ArrayList<Phone> phones = phoneDAO.find(new Phone(c.getId()), null);
+            ArrayList<AttachedFile> files = fileDAO.find(new AttachedFile(c.getId()), null);
+            rows.add(new Row(c, phones, files));
         }
         return rows;
     }
@@ -364,20 +391,21 @@ public class LogicUtils {
         GenericDAO<Contact> contactDAO = new MysqlContactDAO();
         ArrayList<Contact> list = new ArrayList<>();
         String[] emails = req.getParameterValues("emails");
+        if(emails == null) emails = new String[]{};
         for(String emailId : emails){
-            list.add(contactDAO.find(new Contact(Integer.parseInt(emailId))).get(0));
+            list.add(contactDAO.find(new Contact(Integer.parseInt(emailId)),null).get(0));
         }
         return list;
     }
 
     public static ArrayList<Phone> getPhonesByContact(Contact contact) throws  SQLException {
         GenericDAO<Phone> phoneDAO = new MysqlPhoneDAO();
-        return phoneDAO.find(new Phone(contact.getId()));
+        return phoneDAO.find(new Phone(contact.getId()),null);
     }
 
     public static ArrayList<AttachedFile> getFilesByContact(Contact contact) throws  SQLException {
         GenericDAO<AttachedFile> fileDAO = new MysqlFileDAO();
-        return fileDAO.find(new AttachedFile(contact.getId()));
+        return fileDAO.find(new AttachedFile(contact.getId()),null);
     }
 
     public static void setDateRange(HttpServletRequest req, Contact c){
@@ -404,8 +432,24 @@ public class LogicUtils {
     public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
         return new java.sql.Date(date.getTime());
     }
-    public static Integer getContactsNumber() throws SQLException {
+    public static Integer getContactsNumber(Contact criteria) throws SQLException {
         MysqlContactDAO contactDAO = new MysqlContactDAO();
-        return contactDAO.getContactsNumber();
+        return contactDAO.getContactsNumber(criteria);
     }
+
+    public static boolean hasCriteria(HttpServletRequest req){
+        Integer deleteFilter = 0;
+        LOGGER.info(req.getAttribute("filterDelete") != null);
+        if(req.getAttribute("filterDelete") != null)
+            deleteFilter = Integer.parseInt((String)req.getAttribute("filterDelete"));
+
+        LOGGER.info(deleteFilter);
+        if(deleteFilter == 1) {
+            LOGGER.info("removed");
+            req.getSession().removeAttribute("criteria");
+            LOGGER.info(req.getSession().getAttributeNames());
+        }
+        return req.getSession().getAttribute("criteria") != null;
+    }
+
 }
