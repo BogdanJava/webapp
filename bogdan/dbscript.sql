@@ -29,7 +29,7 @@ CREATE TABLE `contact_book` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_contact_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 
 CREATE TABLE `phone_book` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -44,7 +44,7 @@ CREATE TABLE `phone_book` (
   UNIQUE KEY `id_phone_UNIQUE` (`id`),
   KEY `contact_id_idx` (`contact_id`),
   CONSTRAINT `contact_phone_fk` FOREIGN KEY (`contact_id`) REFERENCES `contact_book` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 
 CREATE TABLE `attached_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -54,9 +54,11 @@ CREATE TABLE `attached_files` (
   `real_path` varchar(100) NOT NULL,
   `deleted` bit(1) DEFAULT b'0',
   `name` varchar(45) DEFAULT NULL,
-  'type' varchar(45) DEFAULT NULL,
+  `file_type` varchar(30) DEFAULT NULL,
+  `add_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `contact_fk_idx` (`contact_id`),
   CONSTRAINT `contact_afile_fk` FOREIGN KEY (`contact_id`) REFERENCES `contact_book` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4
+
