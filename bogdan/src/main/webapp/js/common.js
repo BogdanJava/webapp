@@ -51,13 +51,22 @@ function clickSubmit(){
         tr1.parentNode.removeChild(tr1);
     }
     for(var i = 0; i<oldFiles.length; i++){
+        if(oldFiles[i].value == '-1') continue;
         var tr2 = oldFiles[i].parentNode;
         tr2.parentNode.removeChild(tr2);
     }
 
     if(fileDiv.innerHTML === "Файл не выбран"){
         var photoDiv = document.getElementById("photoDiv");
-        photoDiv.parentNode.removeChild(photoDiv);
+        var notUpdate = document.getElementsByName("notUpdate")[0];
+        if(notUpdate == null || notUpdate == undefined){
+            notUpdate = document.createElement("input");
+            notUpdate.setAttribute("type", "hidden");
+            notUpdate.setAttribute("value", "1");
+            notUpdate.setAttribute("name", "notUpdate");
+            photoDiv.appendChild(notUpdate);
+            document.createElement("input")
+        }
     }
     document.getElementById("submitInput").click();
 }

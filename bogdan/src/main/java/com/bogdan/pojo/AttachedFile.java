@@ -2,6 +2,7 @@ package com.bogdan.pojo;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 public class AttachedFile implements Serializable {
@@ -102,5 +103,11 @@ public class AttachedFile implements Serializable {
     @Override
     public String toString() {
         return name + file_type;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        AttachedFile file = (AttachedFile) obj;
+        return file != null && obj.getClass() == this.getClass() && Arrays.equals(this.bytes, file.bytes);
     }
 }

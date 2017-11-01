@@ -1,12 +1,5 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@page isErrorPage = "true" %>
-
-<html>
-<head>
-    <title>Show Error Page</title>
-</head>
-
-<body>
 <h1>Opps...</h1>
 <table width = "100%" border = "1">
     <tr valign = "top">
@@ -34,6 +27,3 @@
         </td>
     </tr>
 </table>
-
-</body>
-</html>

@@ -1,9 +1,11 @@
 package com.bogdan.filter;
 
-import com.bogdan.logic.LogicUtils;
+import com.bogdan.commands.showpage.ShowErrorPageCommand;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Phone;
+import com.bogdan.utils.LogicUtils;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.ArrayUtils;
@@ -16,7 +18,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -34,7 +40,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private void setParameters(ServletRequest servletRequest, ServletResponse response) {
+    private void setParameters(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         List<String> fileRealNames = new ArrayList<>();
         List<AttachedFile> afList = new ArrayList<>();
         List<Phone> phoneList = new ArrayList<>();
@@ -110,32 +116,42 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        for (int i = 0; i < numbers.size(); i++) {
-            Phone p = new Phone();
-            p.setOperatorCode(operatorCodes.get(i));
-            p.setStateCode(countryCodes.get(i));
-            p.setType(phoneTypes.get(i));
-            p.setNumber(numbers.get(i));
-            p.setComment(comments.get(i));
-            phoneList.add(p);
+            for (int i = 0; i < numbers.size(); i++) {
+                Phone p = new Phone();
+                p.setOperatorCode(operatorCodes.get(i));
+                p.setStateCode(countryCodes.get(i));
+                p.setType(phoneTypes.get(i));
+                p.setNumber(numbers.get(i));
+                p.setComment(comments.get(i));
+                phoneList.add(p);
+            }
+            for (int i = 0; i < afList.size(); i++) {
+                AttachedFile thisFile = afList.get(i);
+                thisFile.setType(LogicUtils.getFileType(fileRealNames.get(i)));
+                thisFile.setName(fileNames.get(i));
+                thisFile.setDescription(fileComments.get(i));
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date;
+                if(fileDates.get(i) != null && !fileDates.get(i).equals("")) {
+                    date = dateFormat.parse(fileDates.get(i));
+                } else date = new Date();
+                thisFile.setDate(date);
+            }
+            LOGGER.info(fileRealNames);
+            LOGGER.info("Phone list: " + phoneList);
+            LOGGER.info("Number of files: " + afList.size());
+            servletRequest.setAttribute("phoneList", phoneList);
+            servletRequest.setAttribute("fileList", afList);
+            servletRequest.setAttribute("deletedPhones", deletedPhones);
+            servletRequest.setAttribute("deletedFiles", deletedFiles);
+        } catch (ParseException | FileUploadException e){
+            LOGGER.info(e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()){
+                LOGGER.info(el);
+            }
+            new ShowErrorPageCommand().execute((HttpServletRequest)servletRequest,
+                    (HttpServletResponse)servletResponse);
         }
-        for (int i = 0; i < afList.size(); i++) {
-            AttachedFile thisFile = afList.get(i);
-            thisFile.setType(LogicUtils.getFileType(fileRealNames.get(i)));
-            thisFile.setName(fileNames.get(i));
-            thisFile.setDescription(fileComments.get(i));
-            thisFile.setDate(fileDates.get(i).equals("") ? new Date() : new Date(fileDates.get(i)));
-        }
-        LOGGER.info(fileRealNames);
-        LOGGER.info("Phone list: " + phoneList);
-        LOGGER.info("Number of files: " + afList.size());
-        servletRequest.setAttribute("phoneList", phoneList);
-        servletRequest.setAttribute("fileList", afList);
-        servletRequest.setAttribute("deletedPhones", deletedPhones);
-        servletRequest.setAttribute("deletedFiles", deletedFiles);
     }
 }

@@ -1,12 +1,15 @@
 package com.bogdan.dao;
 
-import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.Limit;
 import com.bogdan.pojo.Phone;
+import com.bogdan.utils.LogicUtils;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MysqlPhoneDAO implements GenericDAO<Phone> {
@@ -70,8 +73,7 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
             ps.setInt(2, from);
             ps.setInt(3, number);
             ResultSet resultSet = ps.executeQuery();
-            ArrayList<Phone> phones = LogicUtils.getPhonesFromResultSet(resultSet);
-            return phones;
+            return LogicUtils.getPhonesFromResultSet(resultSet);
         } finally {
             if(conn != null) conn.close();
             if(ps != null) ps.close();
@@ -82,24 +84,22 @@ public class MysqlPhoneDAO implements GenericDAO<Phone> {
         Connection conn = MysqlDAOFactory.createConnection();
         String sql = "SELECT * FROM phone_book WHERE deleted=0";
         PreparedStatement statement = null;
-        ArrayList<Phone> list = null;
+        ArrayList<Phone> list;
         ArrayList<Field> notNullFields = new ArrayList<>();
         ArrayList<Object> values = new ArrayList<>();
         try {
             Field[] fields =  Phone.class.getDeclaredFields();
             LogicUtils.initLists(fields, notNullFields, values, data);
-            String sqlString = LogicUtils.getQuery(sql, notNullFields, values);
+            String sqlString = LogicUtils.getQuery(sql, notNullFields);
             statement = conn.prepareStatement(sqlString);
             LogicUtils.initStatement(statement, notNullFields, values);
             LOGGER.info(sqlString);
             ResultSet set = statement.executeQuery();
-            list =  LogicUtils.getPhonesFromResultSet(set);
+            return  LogicUtils.getPhonesFromResultSet(set);
         } finally {
             if(statement != null) statement.close();
             if(conn != null) conn.close();
         }
-
-        return list;
     }
 
     public ArrayList<Phone> getAll(int contactId) throws SQLException {

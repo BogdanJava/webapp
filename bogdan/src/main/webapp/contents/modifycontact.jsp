@@ -13,11 +13,11 @@
         <h2>Личные данные</h2>
         <div class="form-group">
             <input type="text" name="first_name" pattern="^[a-zA-Zа-яА-Я]+$" id="first_name" value="${contact.firstName}" required autofocus>
-            <label class="control-label" for="first_name">Имя</label><i class="bar"></i>
+            <label class="control-label" for="first_name">Имя*</label><i class="bar"></i>
         </div>
         <div class="form-group">
             <input type="text" name="last_name" pattern="^[a-zA-Zа-яА-Я]+$" id="last_name" value="${contact.lastName}" required>
-            <label class="control-label" for="last_name">Фамилия</label><i class="bar"></i>
+            <label class="control-label" for="last_name">Фамилия*</label><i class="bar"></i>
         </div>
         <div class="form-group">
             <input type="text" name="patronymic" pattern="^[a-zA-Zа-яА-Я]+$" value="${contact.patronymic}" id="patronymic">
@@ -100,7 +100,7 @@
         </div>
         <div class="form-group">
             <input type="email" id="email" name="email" value="${contact.email}" required>
-            <label class="control-label" for="email">E-mail</label><i class="bar"></i>
+            <label class="control-label" for="email">E-mail*</label><i class="bar"></i>
         </div>
         <h2>Телефоны</h2>
         <div>
@@ -156,7 +156,8 @@
                 <c:forEach items="${files}" var="curr">
                     <tr class="contact-row">
                         <td style="text-align: center;"><input type="checkbox" name="f_checkBox" /></td>
-                        <td class="center contact-image image-column "><c:out value="${curr.name}"/></td>
+                        <td class="center contact-image image-column "><a href="${curr.relativePath}"><c:out
+                                value="${curr.name}"/></a></td>
                         <td class="left contact-name contact-column"><c:out value="${curr.description}"/></td>
                         <td class="right contact-name contact-column"><c:out value="${curr.date}"/></td>
                         <input type="hidden" name="t_fid" value="${curr.id}"/>
@@ -212,11 +213,11 @@
                 <div class="modal-body" style="width: 400px">
                     <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;" id="fileContainer">
                         <div class="form-group">
-                            <input type="text" pattern="^[a-zA-Z0-9]+$" id="fname" name="fname"/>
+                            <input type="text" pattern="^[a-zA-Z0-9]+$" id="fname"/>
                             <label class="control-label" for="fname" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Имя файла<i class="bar"></i></label>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="f_comment" name="fcomment"/>
+                            <input type="text" id="f_comment"/>
                             <label class="control-label" for="f_comment" >Комментарий...</label><i class="bar"></i>
                         </div>
                         <div class="button-container" id="buttonContainer">

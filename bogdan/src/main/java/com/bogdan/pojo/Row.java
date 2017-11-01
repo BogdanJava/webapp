@@ -7,6 +7,8 @@ public class Row {
     private ArrayList<Phone> phones;
     private ArrayList<AttachedFile> files;
 
+    public Row(){}
+
     public Row(Contact c, ArrayList<Phone> p, ArrayList<AttachedFile> af){
         contact = c;
         phones = p;

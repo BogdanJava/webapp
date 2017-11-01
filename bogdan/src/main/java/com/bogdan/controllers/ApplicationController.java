@@ -1,7 +1,7 @@
 package com.bogdan.controllers;
 
-import com.bogdan.viewhelper.Command;
-import com.bogdan.viewhelper.CommandMapper;
+import com.bogdan.commands.Command;
+import com.bogdan.mappers.CommandMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

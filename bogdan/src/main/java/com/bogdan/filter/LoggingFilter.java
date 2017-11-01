@@ -1,4 +1,5 @@
 package com.bogdan.filter;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -8,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 @WebFilter(filterName = "loggingFilter")
@@ -29,10 +29,10 @@ public class LoggingFilter implements Filter {
             String headerValue = httpServletRequest.getHeader(header);
             builder.append("\nHeader " + header + " has value " + headerValue);
         }
-        builder.append("\nRequest headers are :" + params.size());
-        builder.append("\nTotal amount of request parameters is:" + params.size());
+        builder.append("\r\nRequest headers are :" + params.size());
+        builder.append("\r\nTotal amount of request parameters is:" + params.size());
         for(String param : params.keySet()) {
-            builder.append("\nParameter " + param + " has value " + params.get(param)[0]);
+            builder.append("\r\nParameter " + param + " has value " + params.get(param)[0]);
         }
         LOGGER.info(builder.toString());
     }

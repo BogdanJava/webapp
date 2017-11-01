@@ -1,10 +1,7 @@
 package com.bogdan.templates;
 
-import com.bogdan.logic.LogicUtils;
 import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
 
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

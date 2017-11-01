@@ -12,7 +12,7 @@
         <div id="emails">
             <c:forEach items="${rows}" var="curr">
                 <div class="form-group">
-                    <input type="email" name="emailadresses" id = "asd" value="${curr.contact.email}">
+                    <input type="email" name="emailaddresses" id = "asd" value="${curr.contact.email}" required>
                     <label class="control-label" for="asd">Email</label>
                     <i class="bar"></i>
                 </div>

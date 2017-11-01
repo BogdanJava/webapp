@@ -2,12 +2,9 @@ package com.bogdan.templates;
 
 import org.antlr.stringtemplate.StringTemplate;
 
-import javax.servlet.ServletContext;
 import java.util.Map;
 
 public abstract class AbstractTemplate {
-
-    protected ServletContext context;
     protected StringTemplate template;
     protected Map<String, String> attributes;
 
@@ -17,17 +14,15 @@ public abstract class AbstractTemplate {
 
     AbstractTemplate(){}
 
-    public AbstractTemplate(ServletContext context){
-        this.context = context;
-    }
-
-    public static AbstractTemplate getInstance(String templateName, ServletContext context){
+    public static AbstractTemplate getInstance(String templateName){
         switch (templateName){
-            case "adv": return new AdvTemplate(context);
-            case "birthday": return new BirthdayTemplate(context);
+            case "adv": return new AdvTemplate();
+            case "birthday": return new BirthdayTemplate();
             default: return null;
         }
     }
+
+    public abstract String getStandardTopic();
 
     public abstract String getSample();
 

@@ -1,14 +1,13 @@
 package com.bogdan.controllers;
 
-import com.bogdan.logic.LogicUtils;
-import com.bogdan.logic.ScheduleExecutor;
+import com.bogdan.commands.showpage.GetStaticResourceCommand;
+import com.bogdan.commands.showpage.ShowErrorPageCommand;
+import com.bogdan.mappers.ApplicationControllerMapper;
+import com.bogdan.mappers.UrlMapper;
+import com.bogdan.schedule.ScheduleExecutor;
 import com.bogdan.templates.AppStringTemplates;
-import com.bogdan.viewhelper.ErrorPageViewHelper;
-import com.bogdan.viewhelper.UrlMapper;
-import com.bogdan.viewhelper.StaticResourceViewHelper;
+import com.bogdan.utils.LogicUtils;
 import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
-import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
 
@@ -56,17 +55,18 @@ public class FrontController extends HttpServlet {
             }
         } catch (ServletException | IOException e) {
             try {
-                new ErrorPageViewHelper().execute(req, resp);
-            } catch (ServletException e1) {
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                new ShowErrorPageCommand().execute(req, resp);
+            } catch (ServletException | IOException e1){
+                LOGGER.info(e1.getMessage());
+                for(StackTraceElement el : e1.getStackTrace()){
+                    LOGGER.info(el);
+                }
             }
         }
     }
 
     private void processStaticResource(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        new StaticResourceViewHelper().execute(req, resp);
+        new GetStaticResourceCommand().execute(req, resp);
     }
 
     private boolean isStaticResource(String requestedURI) {

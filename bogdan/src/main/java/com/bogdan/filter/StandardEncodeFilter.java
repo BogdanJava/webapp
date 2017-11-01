@@ -1,12 +1,14 @@
 package com.bogdan.filter;
 
-import com.bogdan.logic.LogicUtils;
+import com.bogdan.utils.LogicUtils;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Enumeration;
 
 @WebFilter(filterName = "standardEncodeFilter")
 public class StandardEncodeFilter extends BaseEncodeFilter {

@@ -12,6 +12,12 @@ window.onload = function () {
 }
 
 function clickSend() {
+    var parrent = document.getElementById("emails");
+    var inputs = parrent.getElementsByTagName("input");
+    console.log(inputs.length);
+    if(inputs.length === 0) {
+        return;
+    }
     var submit = document.getElementById("submitInput");
     submit.click();
 }
@@ -28,8 +34,9 @@ function addMailField() {
         var div = document.createElement("div");
         div.setAttribute("class", "form-group");
         var input = document.createElement("input");
-        input.setAttribute("name", "emailadresses");
+        input.setAttribute("name", "emailaddresses");
         input.setAttribute("type", "email");
+        input.required = true;
         input.setAttribute("id", newId);
         var label = document.createElement("label");
         label.setAttribute("for", newId);

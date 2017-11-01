@@ -17,7 +17,7 @@ window.onload = function () {
     else {
         prevButton.disabled = false;
     }
-    if(page == maxpage){
+    if(page >= maxpage){
         nextButton.disabled = true;
     } else{
         nextButton.disabled = false;

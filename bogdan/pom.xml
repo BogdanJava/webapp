@@ -100,7 +100,7 @@
                     <url>http://localhost:8080/manager/text</url>
                     <server>Tomcat7Server</server>
                     <username>admin</username>
-                    <password>admin</password>
+                    <password>1234568</password>
                     <path>/webapp</path>
                 </configuration>
             </plugin>

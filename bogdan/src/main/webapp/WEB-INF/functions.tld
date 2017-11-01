@@ -12,7 +12,7 @@
 
     <function>
         <name>getTemplateName</name>
-        <function-class>com.bogdan.logic.LogicUtils</function-class>
+        <function-class>com.bogdan.utils.LogicUtils</function-class>
         <function-signature>java.lang.String getTemplateName(java.lang.String)</function-signature>
     </function>
 

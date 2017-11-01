@@ -1,36 +1,13 @@
 package com.bogdan.templates;
 
-import org.antlr.stringtemplate.StringTemplate;
-
-import javax.management.Notification;
-import javax.servlet.ServletContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class BirthdayTemplate extends AbstractTemplate {
 
-    public BirthdayTemplate(ServletContext context) {
-        super(context);
-    }
-
-    public BirthdayTemplate(String templateName){
-        template = AppStringTemplates.getTemplateByName(templateName);
-    }
-
-    BirthdayTemplate(){}
+    public BirthdayTemplate(){}
 
     @Override
     public String getHtml() {
         if(template == null) {
-            ArrayList<StringTemplate> templates = (ArrayList<StringTemplate>) context.getAttribute("templates");
-            for (StringTemplate st : templates) {
-                if (st.getName().equals("birthday")) {
-                    template = st;
-                    break;
-                }
-            }
+            template = AppStringTemplates.getTemplateByName("birthday");
         }
         template.reset();
         template.setAttribute("username", attributes.get("username"));
@@ -41,6 +18,11 @@ public class BirthdayTemplate extends AbstractTemplate {
     @Override
     public String getSubject() {
         return "Happy Birthday to You!";
+    }
+
+    @Override
+    public String getStandardTopic() {
+        return "Happy birthday to You!";
     }
 
     @Override

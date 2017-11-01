@@ -11,11 +11,11 @@
         <h2>Личные данные</h2>
         <div class="form-group">
             <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" name="first_name" id="first_name" required autofocus>
-            <label class="control-label" for="first_name">Имя</label><i class="bar"></i>
+            <label class="control-label" for="first_name">Имя*</label><i class="bar"></i>
         </div>
         <div class="form-group">
             <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" name="last_name" id="last_name" required>
-            <label class="control-label" for="last_name">Фамилия</label><i class="bar"></i>
+            <label class="control-label" for="last_name">Фамилия*</label><i class="bar"></i>
         </div>
         <div class="form-group">
             <input type="text"pattern = "^[а-яА-Яa-zA-Z]+$" name="patronymic" id="patronymic">
@@ -77,8 +77,8 @@
             <label class="control-label" for="house_number">Дом</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="email" id="email" name="email" >
-            <label class="control-label" for="email">E-mail</label><i class="bar"></i>
+            <input type="email" id="email" name="email" required>
+            <label class="control-label" for="email">E-mail*</label><i class="bar"></i>
         </div>
         <h2>Телефоны</h2>
         <div>
@@ -163,11 +163,11 @@
                 <div class="modal-body" style="width: 400px">
                     <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;" id="fileContainer">
                         <div class="form-group">
-                            <input type="text" pattern = "^[a-zA-Z0-9]+$" id="fname" name="fname"/>
+                            <input type="text" pattern = "^[a-zA-Z0-9]+$" id="fname"/>
                             <label class="control-label" for="fname" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Имя файла<i class="bar"></i></label>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="f_comment" name="fcomment"/>
+                            <input type="text" id="f_comment"/>
                             <label class="control-label" for="f_comment" >Комментарий...</label><i class="bar"></i>
                         </div>
                         <div class="button-container" id="buttonContainer">

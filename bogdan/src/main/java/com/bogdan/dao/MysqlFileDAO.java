@@ -1,12 +1,15 @@
 package com.bogdan.dao;
 
-import com.bogdan.logic.LogicUtils;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Limit;
+import com.bogdan.utils.LogicUtils;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MysqlFileDAO implements GenericDAO<AttachedFile> {
@@ -50,8 +53,7 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
             ps.setInt(2, from);
             ps.setInt(3, number);
             ResultSet resultSet = ps.executeQuery();
-            ArrayList<AttachedFile> files = LogicUtils.getFilesFromResultSet(resultSet);
-            return files;
+            return LogicUtils.getFilesFromResultSet(resultSet);
         } finally {
             if(conn != null) conn.close();
             if(ps != null) ps.close();
@@ -81,13 +83,13 @@ public class MysqlFileDAO implements GenericDAO<AttachedFile> {
         Connection conn = MysqlDAOFactory.createConnection();
         String sql = "SELECT * FROM attached_files WHERE deleted=0";
         PreparedStatement statement = null;
-        ArrayList<AttachedFile> list = null;
+        ArrayList<AttachedFile> list;
         ArrayList<Field> notNullFields = new ArrayList<>();
         ArrayList<Object> values = new ArrayList<>();
         try {
             Field[] fields =  AttachedFile.class.getDeclaredFields();
             LogicUtils.initLists(fields, notNullFields, values, data);
-            String sqlString = LogicUtils.getQuery(sql, notNullFields, values);
+            String sqlString = LogicUtils.getQuery(sql, notNullFields);
             statement = conn.prepareStatement(sqlString);
             LogicUtils.initStatement(statement, notNullFields, values);
             LOGGER.info(sqlString);

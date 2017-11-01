@@ -1,7 +1,7 @@
 package com.bogdan.controllers;
 
-import com.bogdan.viewhelper.BasicCommandMapper;
-import com.bogdan.viewhelper.CommandMapper;
+import com.bogdan.mappers.BasicCommandMapper;
+import com.bogdan.mappers.CommandMapper;
 
 public class BasicApplicationController extends ApplicationController {
     private final String appName = "basic";
