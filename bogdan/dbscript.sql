@@ -2,7 +2,7 @@ create database shishkin_bogdan_db
 character set 'utf8mb4'
 collate 'utf8_general_ci';
 
-CREATE USER 'vasya'@'localhost' IDENTIFIED BY '12345';
+CREATE USER 'vasya'@'localhost' IDENTIFIED BY 'vasya';
 GRANT ALL PRIVILEGES ON shishkin_bogdan_db.* TO 'vasya'@'localhost'
 
 use shishkin_bogdan_db;
