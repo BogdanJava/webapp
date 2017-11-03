@@ -12,15 +12,15 @@
         <input type="hidden" name="editContactId" value="${contact.id}">
         <h2>Личные данные</h2>
         <div class="form-group">
-            <input type="text" name="first_name" pattern="^[a-zA-Zа-яА-Я]+$" id="first_name" value="${contact.firstName}" required autofocus>
+            <input type="text" name="first_name" pattern="^[a-zA-Z]+$" id="first_name" value="${contact.firstName}" required autofocus>
             <label class="control-label" for="first_name">Имя*</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="last_name" pattern="^[a-zA-Zа-яА-Я]+$" id="last_name" value="${contact.lastName}" required>
+            <input type="text" name="last_name" pattern="^[a-zA-Z]+$" id="last_name" value="${contact.lastName}" required>
             <label class="control-label" for="last_name">Фамилия*</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" name="patronymic" pattern="^[a-zA-Zа-яА-Я]+$" value="${contact.patronymic}" id="patronymic">
+            <input type="text" name="patronymic" pattern="^[a-zA-Z]+$" value="${contact.patronymic}" id="patronymic">
             <label class="control-label" for="patronymic">Отчество</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -74,12 +74,12 @@
             <label class="control-label" for="url">Личный сайт</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="job" pattern="^[a-zA-Zа-яА-Я]+$" name="job" value="${contact.jobPlace}">
+            <input type="text" id="job" pattern="^[a-zA-Z]+$" name="job" value="${contact.jobPlace}">
             <label class="control-label" for="job">Место работы</label><i class="bar"></i>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">
-            <input type="text" id="country" pattern="^[a-zA-Zа-яА-Я]+$" name="country" value="${contact.state}">
+            <input type="text" id="country" pattern="^[a-zA-Z]+$" name="country" value="${contact.state}">
             <label class="control-label" for="country">Страна</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -87,11 +87,11 @@
             <label class="control-label" for="index">Индекс</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="city" pattern="^[a-zA-Zа-яА-Я]+$" name="city" value="${contact.city}">
+            <input type="text" id="city" pattern="^[a-zA-Z]+$" name="city" value="${contact.city}">
             <label class="control-label" for="city">Город</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="street" pattern="^[a-zA-Zа-яА-Я]+$" name="street" value="${contact.street}">
+            <input type="text" id="street" pattern="^[a-zA-Z]+$" name="street" value="${contact.street}">
             <label class="control-label" for="street">Улица</label><i class="bar"></i>
         </div>
         <div class="form-group">

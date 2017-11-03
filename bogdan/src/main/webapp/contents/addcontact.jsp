@@ -10,15 +10,15 @@
         <h1>Новый контакт</h1><br>
         <h2>Личные данные</h2>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" name="first_name" id="first_name" required autofocus>
+            <input type="text" pattern = "^[a-zA-Z]+$" name="first_name" id="first_name" required autofocus>
             <label class="control-label" for="first_name">Имя*</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" name="last_name" id="last_name" required>
+            <input type="text" pattern = "^[a-zA-Z]+$" name="last_name" id="last_name" required>
             <label class="control-label" for="last_name">Фамилия*</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text"pattern = "^[а-яА-Яa-zA-Z]+$" name="patronymic" id="patronymic">
+            <input type="text"pattern = "^[a-zA-Z]+$" name="patronymic" id="patronymic">
             <label class="control-label" for="patronymic">Отчество</label><i class="bar"></i>
         </div>
             <div class="form-group">
@@ -52,12 +52,12 @@
             <label class="control-label" for="url">Личный сайт</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" id="job" name="job" >
+            <input type="text" pattern = "^[a-zA-Z]+$" id="job" name="job" >
             <label class="control-label" for="job">Место работы</label><i class="bar"></i>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" id="country" name="country" >
+            <input type="text" pattern = "^[a-zA-Z]+$" id="country" name="country" >
             <label class="control-label" for="country">Страна</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -65,11 +65,11 @@
             <label class="control-label" for="index">Индекс</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" id="city" name="city" >
+            <input type="text" pattern = "^[a-zA-Z]+$" id="city" name="city" >
             <label class="control-label" for="city">Город</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" pattern = "^[а-яА-Яa-zA-Z]+$" id="street" name="street" >
+            <input type="text" pattern = "^[a-zA-Z]+$" id="street" name="street" >
             <label class="control-label" for="street">Улица</label><i class="bar"></i>
         </div>
         <div class="form-group">
