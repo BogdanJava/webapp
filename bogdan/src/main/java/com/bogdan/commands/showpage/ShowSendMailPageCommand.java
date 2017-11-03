@@ -37,6 +37,7 @@ public class ShowSendMailPageCommand implements Command {
             for (StackTraceElement el : e.getStackTrace()) {
                 LOGGER.info(el);
             }
+            req.setAttribute("exception", e);
             new ShowErrorPageCommand().execute(req, res);
         }
     }

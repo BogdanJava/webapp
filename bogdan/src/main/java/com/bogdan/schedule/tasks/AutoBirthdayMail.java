@@ -1,6 +1,7 @@
 package com.bogdan.schedule.tasks;
 
 import com.bogdan.dao.MysqlContactDAO;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.EmailData;
 import com.bogdan.templates.AppStringTemplates;
@@ -41,7 +42,7 @@ public class AutoBirthdayMail implements Job {
             String sentMessage = MailUtils.sendEmail(emailData);
             LOGGER.info("Mail has been sent automatically.\r\n" + sentMessage);
 
-        } catch (SQLException | EmailException | IOException e) {
+        } catch (SQLException | EmailException | IOException | DataNotValidException e) {
             LOGGER.info(e.getMessage());
             for (StackTraceElement el : e.getStackTrace()) {
                 LOGGER.info(el);

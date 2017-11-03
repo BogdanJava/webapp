@@ -1,11 +1,19 @@
 package com.bogdan.pojo;
 
+import com.bogdan.pojo.validation.IValidated;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class Phone implements Serializable{
+public class Phone implements Serializable, IValidated {
     private Integer id;
+    @Pattern(regexp = "^[0-9]+$", message = "Only digits expected")
     private String state_code;
+    @Pattern(regexp = "^[0-9]+$", message = "Only digits expected")
     private String operator_code;
+    @Pattern(regexp = "^[0-9]+$", message = "Only digits expected")
+    @Size(min = 7, max = 7)
     private String number;
     private String phone_type;
     private String comment;

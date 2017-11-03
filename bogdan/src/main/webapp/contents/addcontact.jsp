@@ -196,11 +196,11 @@
             <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;">
                 <div class="form-group">
                     <label class="control-label"  for="country_code" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Код страны</label>
-                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]+$" id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
-                    <label class="control-label" for="operator_code" style="left:auto";>Код оператора</label>
-                    <input type="text" style="width: 29%; display: inline;" pattern = "^[0-9]+$" id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
-                    <label class="control-label" for="number" style="left:auto">Номер телефона</label>
-                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]+$" id="number" name="number" class="onephone" style="width:59%">
+                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]{1,3}$"  id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
+                    <label class="control-label" for="operator_code"  style="left:auto";>Код оператора</label>
+                    <input type="text" style="width: 29%; display: inline;" pattern = "^[0-9]{1,3}$"  id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
+                    <label class="control-label" for="number"  style="left:auto">Номер телефона</label>
+                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]{7}$"  id="number" name="number" class="onephone" style="width:59%">
                 </div>
                 <div class="form-group">
                     <select id="phone_type" name="phone_type">

@@ -3,6 +3,7 @@ package com.bogdan.commands.actions;
 import com.bogdan.commands.Command;
 import com.bogdan.commands.showpage.ShowContactsCommand;
 import com.bogdan.commands.showpage.ShowErrorPageCommand;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.Row;
 import com.bogdan.utils.CRUDUtils;
@@ -40,14 +41,14 @@ public class EditCommand implements Command {
                 insRow.setPhones(CRUDUtils.insertPhones(req, contact));
             }
             LOGGER.info(LoggerUtils.getEditLog(delRow, insRow));
-        } catch (ParseException | SQLException e){
+            new ShowContactsCommand().execute(req, res);
+        } catch (ParseException | SQLException | DataNotValidException e){
             LOGGER.info("Exception while updating file: " + e);
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
             }
+            req.setAttribute("exception", e);
             new ShowErrorPageCommand().execute(req, res);
-            return;
         }
-        new ShowContactsCommand().execute(req, res);
     }
 }

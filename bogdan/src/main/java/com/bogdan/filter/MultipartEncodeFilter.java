@@ -150,6 +150,7 @@ public class MultipartEncodeFilter extends BaseEncodeFilter{
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
             }
+            servletRequest.setAttribute("exception", e);
             new ShowErrorPageCommand().execute((HttpServletRequest)servletRequest,
                     (HttpServletResponse)servletResponse);
         }

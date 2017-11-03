@@ -87,6 +87,17 @@
             <artifactId>stringtemplate</artifactId>
             <version>3.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -102,6 +113,7 @@
                     <username>admin</username>
                     <password>1234568</password>
                     <path>/webapp</path>
+                    <update>true</update>
                 </configuration>
             </plugin>
             <plugin>
@@ -109,12 +121,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>

@@ -54,7 +54,12 @@ public class FrontController extends HttpServlet {
                 processDynamicResource(req, resp);
             }
         } catch (ServletException | IOException e) {
+            LOGGER.info(e.getMessage());
+            for(StackTraceElement el : e.getStackTrace()){
+                LOGGER.info(el);
+            }
             try {
+                req.setAttribute("exception", e);
                 new ShowErrorPageCommand().execute(req, resp);
             } catch (ServletException | IOException e1){
                 LOGGER.info(e1.getMessage());

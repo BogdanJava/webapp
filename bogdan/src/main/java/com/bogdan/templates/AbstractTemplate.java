@@ -22,6 +22,19 @@ public abstract class AbstractTemplate {
         }
     }
 
+    public static String getTemplateName(String fileName) {
+        switch (fileName) {
+            case "adv":
+                return "Рекламный";
+            case "birthday":
+                return "Поздравление с ДР";
+            case "newyear":
+                return "Поздравление с НГ";
+            default:
+                return null;
+        }
+    }
+
     public abstract String getStandardTopic();
 
     public abstract String getSample();

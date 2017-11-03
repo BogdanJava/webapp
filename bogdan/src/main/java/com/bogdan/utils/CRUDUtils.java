@@ -3,6 +3,7 @@ package com.bogdan.utils;
 import com.bogdan.dao.MysqlContactDAO;
 import com.bogdan.dao.MysqlFileDAO;
 import com.bogdan.dao.MysqlPhoneDAO;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.Limit;
@@ -10,6 +11,7 @@ import com.bogdan.pojo.Phone;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,7 +34,7 @@ public class CRUDUtils {
         return contact.getId() != -1;
     }
 
-    public static ArrayList<Phone> insertPhones(HttpServletRequest req, Contact contact) throws SQLException {
+    public static ArrayList<Phone> insertPhones(HttpServletRequest req, Contact contact) throws SQLException, DataNotValidException {
         ArrayList<Phone> phones = LogicUtils.initPhones(req, contact.getId());
         for (Phone phone : phones) {
             phoneDAO.insert(phone);
@@ -40,7 +42,7 @@ public class CRUDUtils {
         return phones;
     }
 
-    public static ArrayList<AttachedFile> insertFiles(HttpServletRequest req, Contact contact) throws SQLException, IOException {
+    public static ArrayList<AttachedFile> insertFiles(HttpServletRequest req, Contact contact) throws SQLException, IOException, DataNotValidException {
         ArrayList<AttachedFile> files = LogicUtils.initFiles(req, contact.getId());
         for (AttachedFile file : files) {
             LogicUtils.createFile(contact, file);
@@ -55,6 +57,7 @@ public class CRUDUtils {
             phoneDAO.delete(contactId);
             fileDAO.delete(contactId);
         }
+        throw new ValidationException();
     }
 
     public static ArrayList<Phone> deletePhones(Integer[] deletedPhonesIds) throws SQLException {

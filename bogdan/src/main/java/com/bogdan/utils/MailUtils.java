@@ -1,8 +1,10 @@
 package com.bogdan.utils;
 
 import com.bogdan.dao.MysqlContactDAO;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.EmailData;
+import com.bogdan.pojo.validation.IValidated;
 import com.bogdan.templates.AbstractTemplate;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -12,6 +14,9 @@ import org.apache.commons.mail.HtmlEmail;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,7 +58,11 @@ public class MailUtils {
         return contacts;
     }
 
-    public static String sendEmail(EmailData emailData) throws SQLException, EmailException, IOException {
+    public static String sendEmail(EmailData emailData) throws SQLException, EmailException, IOException,
+            DataNotValidException {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
+        IValidated.validate(emailData, validator, LOGGER);
             if (emailData.getTemplate() != null) {
                 return sendTemplateEmail(emailData);
             } else {

@@ -1,11 +1,14 @@
 package com.bogdan.pojo;
 
+import com.bogdan.pojo.validation.IValidated;
+
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
-public class AttachedFile implements Serializable {
+public class AttachedFile implements Serializable, IValidated {
 
     public static final String DEFAULTPHOTOURL = "https://pp.userapi.com/c837624/v837624857/5794b/LLJfnj6Xnos.jpg";
     public static String UPLOADPATH = System.getProperty("catalina.base") + File.separator + "webapps" + File.separator + "upload"
@@ -13,11 +16,13 @@ public class AttachedFile implements Serializable {
     public static String RELATIVEPATH =  File.separator + "upload" + File.separator;
 
     private Integer id;
+    @NotNull(message = "Name cannot be null")
     private String name;
     private String relative_path;
     private String real_path;
     private String description;
     private Integer contact_id;
+    @NotNull(message = "File hasn't been uploaded")
     private Byte[] bytes;
     private String file_type;
     private Date add_date;

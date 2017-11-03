@@ -1,13 +1,19 @@
 package com.bogdan.pojo;
 
+import com.bogdan.pojo.validation.IValidated;
 import org.antlr.stringtemplate.StringTemplate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 
-public class EmailData {
+public class EmailData implements IValidated {
 
+    @NotNull(message = "topic cannot be null")
     private String topic;
+    @NotNull(message = "message cannot be null")
     private String message;
+    @Size(min = 1, message = "Size cannot be less than 1")
     private ArrayList<String> subscribers;
     private StringTemplate template;
 

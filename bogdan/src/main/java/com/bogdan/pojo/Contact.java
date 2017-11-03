@@ -1,16 +1,29 @@
 package com.bogdan.pojo;
 
+import com.bogdan.exceptions.DataNotValidException;
+import com.bogdan.pojo.validation.IValidated;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Contact implements Serializable {
+public class Contact implements Serializable, IValidated {
     private Integer id;
+    @NotNull(message = "first_name cannot be null")
     private String first_name;
+    @NotNull(message = "last_name cannot be null")
     private String last_name;
     private String patronymic;
     private String gender;
     private String marital_status;
     private String website_url;
+    @NotNull(message="email cannot be null")
+    @Pattern(regexp = "^(?:[a-zA-Z0-9_'^&/+-])+(?:\\.(?:[a-zA-Z0-9_'^&/+-])+)" +
+            "*@(?:(?:\\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\\.)" +
+            "{3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\]?)|(?:[a-zA-Z0-9-]+\\.)" +
+            "+(?:[a-zA-Z]){2,}\\.?)$",
+            message = "incorrect email format")
     private String email;
     private String job_place;
     private String postal_code;
@@ -21,6 +34,7 @@ public class Contact implements Serializable {
     private String house_number;
     private AttachedFile photo_url;
     private String comment;
+    //field for searching by date
     private Date dateFrom;
     private Date dateTo;
 
@@ -32,7 +46,8 @@ public class Contact implements Serializable {
         return dateFrom;
     }
 
-    public void setDateFrom(Date dateFrom) {
+    public void setDateFrom(Date dateFrom) throws DataNotValidException {
+        if(dateFrom.after(new Date())) throw new DataNotValidException();
         this.dateFrom = dateFrom;
     }
 

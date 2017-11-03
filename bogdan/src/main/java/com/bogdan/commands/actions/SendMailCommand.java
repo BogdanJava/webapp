@@ -3,6 +3,7 @@ package com.bogdan.commands.actions;
 import com.bogdan.commands.Command;
 import com.bogdan.commands.showpage.ShowContactsCommand;
 import com.bogdan.commands.showpage.ShowErrorPageCommand;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.EmailData;
 import com.bogdan.utils.MailUtils;
 import org.apache.commons.mail.EmailException;
@@ -25,11 +26,12 @@ public class SendMailCommand implements Command {
             String sentMessage = MailUtils.sendEmail(emailData);
             LOGGER.info("Message has been successfully sent: \n" + sentMessage);
             new ShowContactsCommand().execute(req, res);
-        } catch (SQLException | EmailException e) {
+        } catch (SQLException | EmailException | DataNotValidException e) {
             LOGGER.info(e.getMessage());
             for (StackTraceElement el : e.getStackTrace()) {
                 LOGGER.info(el);
             }
+            req.setAttribute("exception", e);
             new ShowErrorPageCommand().execute(req, res);
         }
     }

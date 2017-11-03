@@ -2,6 +2,7 @@ package com.bogdan.commands.actions;
 
 import com.bogdan.commands.Command;
 import com.bogdan.commands.showpage.ShowContactsCommand;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.AttachedFile;
 import com.bogdan.pojo.Contact;
 import com.bogdan.pojo.Phone;
@@ -36,7 +37,7 @@ public class AddCommand implements Command{
             else {
                 insertLog =  "There was some error while adding contact.\n";
             }
-        } catch (SQLException | ParseException e) {
+        } catch (SQLException | ParseException | DataNotValidException e) {
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el + "\n");
             }

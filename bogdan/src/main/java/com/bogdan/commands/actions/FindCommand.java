@@ -3,6 +3,7 @@ package com.bogdan.commands.actions;
 import com.bogdan.commands.Command;
 import com.bogdan.commands.showpage.ShowContactsCommand;
 import com.bogdan.commands.showpage.ShowErrorPageCommand;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.Contact;
 import com.bogdan.utils.LogicUtils;
 import org.apache.log4j.Logger;
@@ -25,11 +26,12 @@ public class FindCommand implements Command {
             LogicUtils.setDateRange(req, contact);
             req.getSession().setAttribute("criteria", contact);
             new ShowContactsCommand().execute(req, res);
-        } catch (ParseException e) {
+        } catch (ParseException | DataNotValidException e) {
             LOGGER.info(e.getMessage());
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
             }
+            req.setAttribute("exception", e);
             new ShowErrorPageCommand().execute(req, res);
         }
     }

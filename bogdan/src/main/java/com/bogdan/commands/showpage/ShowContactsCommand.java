@@ -23,7 +23,7 @@ public class ShowContactsCommand implements Command {
        try {
             boolean hasCriteria = LogicUtils.hasCriteria(req);
             Contact criteria = LogicUtils.getCriteria(req);
-            Integer contactsNumber = LogicUtils.getContactsNumber(criteria);
+            Integer maxpage = LogicUtils.getMaxPage(criteria);
             Integer pageId = LogicUtils.getPageId(req);
             if(pageId == null){ // if parameter page is incorrect
                 res.sendRedirect("contacts?page=1");
@@ -34,7 +34,8 @@ public class ShowContactsCommand implements Command {
 
             req.setAttribute("rows", rows);
             req.setAttribute("hasCriteria", hasCriteria ? "yes" : "no");
-            req.setAttribute("maxpage", contactsNumber / 10 + 1);
+           System.out.println(maxpage);
+            req.setAttribute("maxpage", maxpage);
             req.setAttribute("title", String.format("Contacts %d-%d", from + 1,from + rows.size() ));
             req.setAttribute("page", new PageSpecification("footer.jsp", "header.jsp",
                     "../contents/table.jsp"));
@@ -44,6 +45,7 @@ public class ShowContactsCommand implements Command {
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
             }
+            req.setAttribute("exception", e);
             new ShowErrorPageCommand().execute(req, res);
         }
     }

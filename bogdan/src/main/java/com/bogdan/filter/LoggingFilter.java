@@ -46,7 +46,6 @@ public class LoggingFilter implements Filter {
             builder.append("\nHeader " + header + " has value " + headerValue);
         }
         builder.append("\nResponse status is :" + httpServletResponse.getStatus());
-        System.out.println(builder.toString());
         LOGGER.info(builder.toString());
     }
 

@@ -4,7 +4,9 @@ import com.bogdan.dao.GenericDAO;
 import com.bogdan.dao.MysqlContactDAO;
 import com.bogdan.dao.MysqlFileDAO;
 import com.bogdan.dao.MysqlPhoneDAO;
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.*;
+import com.bogdan.pojo.validation.IValidated;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
@@ -13,6 +15,10 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,19 +65,6 @@ public class LogicUtils {
         }
     }
 
-    public static String getTemplateName(String fileName) {
-        switch (fileName) {
-            case "adv":
-                return "Рекламный";
-            case "birthday":
-                return "Поздравление с ДР";
-            case "newyear":
-                return "Поздравление с НГ";
-            default:
-                return null;
-        }
-    }
-
     public static String[] getEmails(HttpServletRequest req){
         String[] values;
         Object attribute = req.getAttribute("emailaddresses");
@@ -83,10 +76,9 @@ public class LogicUtils {
         return values;
     }
 
-
-
     public static StringTemplate getSelectedTemplate(HttpServletRequest req){
-        ArrayList<StringTemplate> templates = (ArrayList<StringTemplate>) req.getServletContext().getAttribute("templates");
+        ArrayList<StringTemplate> templates =
+                (ArrayList<StringTemplate>) req.getServletContext().getAttribute("templates");
         StringTemplate template = null;
         for (StringTemplate t : templates) {
             if (t.getName().equals((String) req.getAttribute("template"))) {
@@ -135,10 +127,14 @@ public class LogicUtils {
         }
     }
 
-    public static ArrayList<AttachedFile> initFiles(HttpServletRequest req, int contactId) {
+    public static ArrayList<AttachedFile> initFiles(HttpServletRequest req, int contactId) throws DataNotValidException {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
         ArrayList<AttachedFile> files = (ArrayList<AttachedFile>) req.getAttribute("fileList");
         if (files != null) {
             for (AttachedFile file : files) {
+                if(!req.getAttribute("command").equals("processSearchContacts"))
+                IValidated.validate(file, validator, LOGGER);
                 file.setContactId(contactId);
                 file.setDate(new Date());
             }
@@ -146,17 +142,24 @@ public class LogicUtils {
         } else return null;
     }
 
-    public static ArrayList<Phone> initPhones(HttpServletRequest req, int contactId) {
+    public static ArrayList<Phone> initPhones(HttpServletRequest req, int contactId) throws ValidationException, DataNotValidException {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
         ArrayList<Phone> phones = (ArrayList<Phone>) req.getAttribute("phoneList");
         if (phones != null) {
             for (Phone phone : phones) {
+                if(!req.getAttribute("command").equals("processSearchContacts"))
+                IValidated.validate(phone, validator, LOGGER);
                 phone.setContactId(contactId);
             }
             return phones;
         } else return null;
     }
 
-    public static Contact initContact(HttpServletRequest req) throws ParseException {
+    public static Contact initContact(HttpServletRequest req) throws ParseException, DataNotValidException {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
+
         Contact c = new Contact();
         String id = (String)req.getAttribute("editContactId");
         if(id != null) c.setId(Integer.parseInt(id));
@@ -189,6 +192,8 @@ public class LogicUtils {
         c.setComment((String) req.getAttribute("comment"));
         if (c.getPhoto() != null)
             c.getPhoto().setType(".jpg");
+        if(!req.getAttribute("command").equals("processSearchContacts"))
+        IValidated.validate(c, validator, LOGGER);
         return c;
     }
 
@@ -438,7 +443,7 @@ public class LogicUtils {
         return fileDAO.find(new AttachedFile(contact.getId()), null);
     }
 
-    public static void setDateRange(HttpServletRequest req, Contact c) {
+    public static void setDateRange(HttpServletRequest req, Contact c) throws DataNotValidException {
         String dateFrom = req.getParameter("less_day") != null && !req.getParameter("less_day").equals("")
                 ? req.getParameter("less_day") : "01";
         String monthFrom = req.getParameter("less_month") != null && !req.getParameter("less_month").equals("")
@@ -502,6 +507,11 @@ public class LogicUtils {
             arr[i] = Integer.parseInt(list.get(i));
         }
         return arr;
+    }
+
+    public static int getMaxPage(Contact criteria) throws SQLException {
+        int maxContacts = LogicUtils.getContactsNumber(criteria);
+        return maxContacts / 10 + (maxContacts % 10 != 0 ? 1 : 0);
     }
 
 }

@@ -2,6 +2,20 @@
 var pmodal = document.getElementById('myModal');
 var fmodal = document.getElementById('fileModal');
 
+pmodal.onclose = function () {
+    var countryCodeInput = document.getElementById('country_code');
+    var operatorCodeInput = document.getElementById('operator_code');
+    var numberInput = document.getElementById('number');
+
+    countryCodeInput.removeAttribute("required");
+    operatorCodeInput.removeAttribute("required");
+    numberInput.removeAttribute("required");
+}
+fmodal.onclose = function () {
+    var fnameInput = document.getElementById('fname');
+    fnameInput.removeAttribute("required");
+}
+
 // Get the button that opens the modal
 var pbtn = document.getElementById("myBtn");
 var fbtn = document.getElementById("addFileBtn");
@@ -11,12 +25,23 @@ var fspan = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal
 pbtn.onclick = function() {
+    var countryCodeInput = document.getElementById('country_code');
+    var operatorCodeInput = document.getElementById('operator_code');
+    var numberInput = document.getElementById('number');
+
+    countryCodeInput.required = true;
+    operatorCodeInput.required = true;
+    numberInput.required = true;
+
     pmodal.style.display = "block";
 }
 
 var lastUpload;
 
 fbtn.onclick = function() {
+    var fnameInput = document.getElementById('fname');
+    fnameInput.required = true;
+
     lastUpload = createUploadButton();
     fmodal.style.display = "block";
 }
@@ -74,11 +99,29 @@ function clickSubmit(){
 var table = document.getElementById("phoneTable").getElementsByTagName('tbody')[0];
 
 function submitModal() {
+
     var countryCode = document.getElementById('country_code').value;
     var operatorCode = document.getElementById('operator_code').value;
     var number = document.getElementById('number').value;
     var phoneType = document.getElementById('phone_type').value;
     var comment = document.getElementById('p_comment').value;
+
+    if(!countryCode.checkValidity() || !operatorCode.checkValidity() || !number.checkValidity()){
+        var countryCodeInput = document.getElementById('country_code');
+        var operatorCodeInput = document.getElementById('operator_code');
+        var numberInput = document.getElementById('number');
+
+        if(!countryCode.checkValidity()){
+            countryCodeInput.setAttribute("color", "red");
+        }
+        if(!operatorCode.checkValidity()){
+            operatorCodeInput.setAttribute("color", "red")
+        }
+        if(!number.checkValidity()){
+            numberInput.setAttribute("color", "red")
+        }
+        return;
+    }
 
     var row = table.insertRow(0);
 
@@ -179,6 +222,13 @@ function submitFileAdd(){
     var fileName = document.getElementById("fname").value;
     var fileRealName = document.getElementById(attachedFile).innerHTML;
     var fileComment = document.getElementById("f_comment").value;
+
+    if(!fileName.checkValidity()) {
+        var fileNameInput = document.getElementById("fname");
+        fileNameInput.setAttribute("color", "red");
+        return;
+    }
+
     var row = fileTable.insertRow();
 
     var checkbox = row.insertCell(0);
