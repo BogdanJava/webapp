@@ -60,9 +60,6 @@ public class MailUtils {
 
     public static String sendEmail(EmailData emailData) throws SQLException, EmailException, IOException,
             DataNotValidException {
-        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
-        Validator validator = vf.getValidator();
-        IValidated.validate(emailData, validator, LOGGER);
             if (emailData.getTemplate() != null) {
                 return sendTemplateEmail(emailData);
             } else {
@@ -71,14 +68,16 @@ public class MailUtils {
     }
 
     private static String sendTemplateEmail(EmailData emailData)
-            throws SQLException, EmailException, IOException {
+            throws SQLException, EmailException, IOException, DataNotValidException {
         AbstractTemplate template = AbstractTemplate.getInstance(emailData.getTemplate().getName());
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
 
         for(String contact : emailData.getSubscribers()){
             Map<String, String> attributes = new HashMap<>();
             Email email = MailUtils.getStandardEmail();
             email.addTo(contact);
-            if(emailData.getTopic() == null || emailData.getMessage().equals("")) emailData.setTopic(template.getStandardTopic());
+            if(emailData.getTopic() == null) emailData.setTopic(template.getStandardTopic());
             email.setSubject(emailData.getTopic());
             switch (emailData.getTemplate().getName()){
                 case "adv": {
@@ -93,13 +92,18 @@ public class MailUtils {
                 }
             }
             template.setAttributes(attributes);
-            email.setMsg(template.getHtml());
+            emailData.setMessage(template.getHtml());
+            email.setMsg(emailData.getMessage());
+            IValidated.validate(emailData, validator, LOGGER);
             email.send();
         }
         return template.getSample();
     }
 
-    private static String sendCommonEmail(EmailData emailData) throws SQLException, EmailException, IOException {
+    private static String sendCommonEmail(EmailData emailData) throws SQLException, EmailException, IOException, DataNotValidException {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
+
         Email email = MailUtils.getStandardEmail();
         for(String emailAddress : emailData.getSubscribers()){
             email.addTo(emailAddress);
@@ -109,6 +113,7 @@ public class MailUtils {
         email.setMsg(emailData.getMessage());
         if(emailData.getTopic() == null || emailData.getMessage().equals("")) emailData.setTopic("No subject");
         email.setSubject(emailData.getTopic());
+        IValidated.validate(emailData, validator, LOGGER);
         email.send();
         return emailData.getMessage();
     }

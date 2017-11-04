@@ -1,11 +1,17 @@
 package com.bogdan.pojo;
 
+import com.bogdan.exceptions.DataNotValidException;
 import com.bogdan.pojo.validation.IValidated;
 import org.antlr.stringtemplate.StringTemplate;
+import org.apache.commons.mail.Email;
+import org.apache.log4j.Logger;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class EmailData implements IValidated {
 

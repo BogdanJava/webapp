@@ -57,7 +57,6 @@ public class CRUDUtils {
             phoneDAO.delete(contactId);
             fileDAO.delete(contactId);
         }
-        throw new ValidationException();
     }
 
     public static ArrayList<Phone> deletePhones(Integer[] deletedPhonesIds) throws SQLException {

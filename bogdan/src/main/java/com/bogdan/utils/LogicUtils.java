@@ -156,13 +156,18 @@ public class LogicUtils {
         } else return null;
     }
 
-    public static Contact initContact(HttpServletRequest req) throws ParseException, DataNotValidException {
+    public static Contact initContact(HttpServletRequest req) throws ParseException, DataNotValidException, SQLException {
         ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
         Validator validator = vf.getValidator();
 
         Contact c = new Contact();
         String id = (String)req.getAttribute("editContactId");
-        if(id != null) c.setId(Integer.parseInt(id));
+        if(id != null) {
+            c.setId(Integer.parseInt(id));
+            if(LogicUtils.getContactsNumber(c) == 0){
+                return null;
+            }
+        }
         c.setFirstName((String) req.getAttribute("first_name"));
         c.setLastName((String) req.getAttribute("last_name"));
         c.setPatronymic((String) req.getAttribute("patronymic"));
@@ -418,7 +423,10 @@ public class LogicUtils {
         GenericDAO<Phone> phoneDAO = new MysqlPhoneDAO();
         GenericDAO<AttachedFile> fileDAO = new MysqlFileDAO();
 
-        Contact foundContact = contactDAO.find(new Contact(id),null).get(0);
+        Contact foundContact = null;
+        ArrayList<Contact> contactById = contactDAO.find(new Contact(id),null);
+        if(contactById.size() != 0) foundContact = contactById.get(0);
+
         ArrayList<Phone> phones = phoneDAO.find(new Phone(id),null);
         ArrayList<AttachedFile> files = fileDAO.find(new AttachedFile(id),null);
 

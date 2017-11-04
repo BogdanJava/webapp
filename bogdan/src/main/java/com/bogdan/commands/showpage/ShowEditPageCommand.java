@@ -21,7 +21,11 @@ public class ShowEditPageCommand implements Command {
         try{
             Integer contactId = Integer.parseInt(req.getParameter("id"));
             Row row = LogicUtils.getRow(contactId);
-
+            if(row.getContact() == null){
+                LOGGER.info("Contact with id=" + contactId + " is deleted or not created yet");
+                res.sendRedirect("add");
+                return;
+            }
             req.setAttribute("contact", row.getContact());
             req.setAttribute("phones", row.getPhones());
             req.setAttribute("files", row.getFiles());

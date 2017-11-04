@@ -24,14 +24,14 @@ function deleteFiles(){
     while (i--) {
         var input = inputs[i];
         var upload = uploads[i];
-        if (input.type != undefined && input.checked == true) {
+        if (input != undefined && input.type != undefined && input.checked == true) {
             var tr = input.parentNode.parentNode;
             var id;
             var c = tr.getElementsByTagName("input");
-            for(var i=0; i<c.length; i++){
-                console.log(c[i].name);
-                if(c[i].name === 't_fid'){
-                    id = c[i].value;
+            for(var j=0; j<c.length; j++){
+                console.log(c[j].name);
+                if(c[j].name === 't_fid'){
+                    id = c[j].value;
                     break;
                 }
             }

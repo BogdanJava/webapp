@@ -7,7 +7,7 @@
 <script src="js/birthdaySelect.js" type="text/javascript"></script>
 
 <div class="container">
-    <form method="POST" action="contacts" enctype="multipart/form-data">
+    <form method="POST" action="contacts" enctype="multipart/form-data" id="form">
         <h1>Изменение: контакт №${contact.id}</h1><br>
         <input type="hidden" name="editContactId" value="${contact.id}">
         <h2>Личные данные</h2>
@@ -74,12 +74,12 @@
             <label class="control-label" for="url">Личный сайт</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="job" pattern="^[a-zA-Z]+$" name="job" value="${contact.jobPlace}">
+            <input type="text" id="job" pattern="^[a-zA-Z ]+$" name="job" value="${contact.jobPlace}">
             <label class="control-label" for="job">Место работы</label><i class="bar"></i>
         </div>
         <h2>Контактная информация</h2>
         <div class="form-group">
-            <input type="text" id="country" pattern="^[a-zA-Z]+$" name="country" value="${contact.state}">
+            <input type="text" id="country" pattern="^[a-zA-Z ]+$" name="country" value="${contact.state}">
             <label class="control-label" for="country">Страна</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -87,11 +87,11 @@
             <label class="control-label" for="index">Индекс</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="city" pattern="^[a-zA-Z]+$" name="city" value="${contact.city}">
+            <input type="text" id="city" pattern="^[a-zA-Z -]+$" name="city" value="${contact.city}">
             <label class="control-label" for="city">Город</label><i class="bar"></i>
         </div>
         <div class="form-group">
-            <input type="text" id="street" pattern="^[a-zA-Z]+$" name="street" value="${contact.street}">
+            <input type="text" id="street" pattern="^[a-zA-Z ]+$" name="street" value="${contact.street}">
             <label class="control-label" for="street">Улица</label><i class="bar"></i>
         </div>
         <div class="form-group">
@@ -248,11 +248,11 @@
             <div class="container" style="padding: 0 3rem;margin: 3rem 0 0 0;">
                 <div class="form-group">
                     <label class="control-label" for="country_code" style="font-size: 0.8rem;color: gray;top: -1.2rem;">Код страны</label>
-                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]{1,3}$" id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
+                    <input type="text" style="width: 29%; display: inline" id="country_code" name="country_code" class="onephone" style="margin-right: 2%;width:15%">
                     <label class="control-label" for="operator_code" style="left:auto";>Код оператора</label>
-                    <input type="text" style="width: 29%; display: inline;" pattern = "^[0-9]{1,3}$" id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
+                    <input type="text" style="width: 29%; display: inline;" id="operator_code" name="operator_code" class="onephone" style="margin-right: 2%;width:20%">
                     <label class="control-label" for="number" style="left:auto">Номер телефона</label>
-                    <input type="text" style="width: 29%; display: inline" pattern = "^[0-9]{7}$" id="number" name="number" class="onephone" style="width:59%">
+                    <input type="text" style="width: 29%; display: inline" id="number" name="number" class="onephone" style="width:59%">
                 </div>
                 <div class="form-group">
                     <select id="phone_type" name="phone_type">

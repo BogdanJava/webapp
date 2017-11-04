@@ -2,18 +2,8 @@
 var pmodal = document.getElementById('myModal');
 var fmodal = document.getElementById('fileModal');
 
-pmodal.onclose = function () {
-    var countryCodeInput = document.getElementById('country_code');
-    var operatorCodeInput = document.getElementById('operator_code');
-    var numberInput = document.getElementById('number');
-
-    countryCodeInput.removeAttribute("required");
-    operatorCodeInput.removeAttribute("required");
-    numberInput.removeAttribute("required");
-}
 fmodal.onclose = function () {
-    var fnameInput = document.getElementById('fname');
-    fnameInput.removeAttribute("required");
+    lastUpload.parentNode.removeChild(lastUpload);
 }
 
 // Get the button that opens the modal
@@ -25,23 +15,12 @@ var fspan = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal
 pbtn.onclick = function() {
-    var countryCodeInput = document.getElementById('country_code');
-    var operatorCodeInput = document.getElementById('operator_code');
-    var numberInput = document.getElementById('number');
-
-    countryCodeInput.required = true;
-    operatorCodeInput.required = true;
-    numberInput.required = true;
-
     pmodal.style.display = "block";
 }
 
 var lastUpload;
 
 fbtn.onclick = function() {
-    var fnameInput = document.getElementById('fname');
-    fnameInput.required = true;
-
     lastUpload = createUploadButton();
     fmodal.style.display = "block";
 }
@@ -52,6 +31,7 @@ pspan.onclick = function() {
 }
 
 fspan.onclick = function() {
+    lastUpload.parentNode.removeChild(lastUpload);
     fmodal.style.display = "none";
 }
 
@@ -61,12 +41,16 @@ window.onclick = function(event) {
         pmodal.style.display = "none";
     }
     if(event.target == fmodal){
+        if(validateFiles(fmodal, validFileExtensions) == false) return;
         lastUpload.parentNode.removeChild(lastUpload);
         fmodal.style.display = "none";
     }
 }
 
 function clickSubmit(){
+
+    if(validateFiles(form, validForPhoto) == false) return;
+
     var fileDiv = document.getElementById("file-name");
     var oldPhones = document.getElementsByName("id_val");
     var oldFiles = document.getElementsByName("t_fid");
@@ -97,8 +81,11 @@ function clickSubmit(){
 }
 
 var table = document.getElementById("phoneTable").getElementsByTagName('tbody')[0];
+var form = document.getElementById("form");
 
 function submitModal() {
+    var codeRegex = new RegExp("^[0-9]{1,3}$");
+    var numberRegex = new RegExp("^[0-9]{7}$");
 
     var countryCode = document.getElementById('country_code').value;
     var operatorCode = document.getElementById('operator_code').value;
@@ -106,19 +93,19 @@ function submitModal() {
     var phoneType = document.getElementById('phone_type').value;
     var comment = document.getElementById('p_comment').value;
 
-    if(!countryCode.checkValidity() || !operatorCode.checkValidity() || !number.checkValidity()){
+    if(!codeRegex.test(countryCode) || !codeRegex.test(operatorCode) || !numberRegex.test(number)){
         var countryCodeInput = document.getElementById('country_code');
         var operatorCodeInput = document.getElementById('operator_code');
         var numberInput = document.getElementById('number');
 
-        if(!countryCode.checkValidity()){
-            countryCodeInput.setAttribute("color", "red");
+        if(!codeRegex.test(countryCode)){
+            countryCodeInput.setAttribute("style", "margin-right: 2%;width:15%;color:red;");
         }
-        if(!operatorCode.checkValidity()){
-            operatorCodeInput.setAttribute("color", "red")
+        if(!codeRegex.test(operatorCode)){
+            operatorCodeInput.setAttribute("color", "margin-right: 2%;width:15%;color:red;")
         }
-        if(!number.checkValidity()){
-            numberInput.setAttribute("color", "red")
+        if(!numberRegex.test(number)){
+            numberInput.setAttribute("color", "margin-right: 2%;width:15%;color:red;")
         }
         return;
     }
@@ -218,14 +205,15 @@ var attachedFile;
 
 function submitFileAdd(){
 
+    if(validateFiles(document.getElementById("form"), validFileExtensions) == false) return;
     var modal = document.getElementById('fileModal');
     var fileName = document.getElementById("fname").value;
     var fileRealName = document.getElementById(attachedFile).innerHTML;
     var fileComment = document.getElementById("f_comment").value;
 
-    if(!fileName.checkValidity()) {
+    if(!new RegExp("^[a-zA-Z0-9._-]{1,30}$").test(fileName)) {
         var fileNameInput = document.getElementById("fname");
-        fileNameInput.setAttribute("color", "red");
+        fileNameInput.setAttribute("style", "margin-right: 2%;width:15%;color:red;");
         return;
     }
 
@@ -292,4 +280,41 @@ function handleFileSelect(evt) {
     })(f);
 
     reader.readAsDataURL(f);
+}
+
+var validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png", ".txt", ".docx"];
+var validForPhoto = [".jpg", ".jpeg", ".gif", "png"];
+
+function validateFiles(oForm, validFiles) {
+    var arrInputs = oForm.getElementsByTagName("input");
+    for (var i = 0; i < arrInputs.length; i++) {
+        var oInput = arrInputs[i];
+        if (oInput.type == "file") {
+            var files = oInput.files;
+            if(files.length != Number(0))
+            if(files[0].size > Number(9437184)) {
+                    alert("file " + files[0].name + " has size more than 10 MB. Try to upload smaller file.");
+                    return false;
+            }
+            var sFileName = oInput.value;
+            if (sFileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < validFiles.length; j++) {
+                    var sCurExtension = validFiles[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
+
+                if (!blnValid) {
+                    console.log(sFileName);
+                    alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + validFiles.join(", "));
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
 }

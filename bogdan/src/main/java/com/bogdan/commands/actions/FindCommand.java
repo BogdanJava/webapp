@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 public class FindCommand implements Command {
@@ -26,7 +27,7 @@ public class FindCommand implements Command {
             LogicUtils.setDateRange(req, contact);
             req.getSession().setAttribute("criteria", contact);
             new ShowContactsCommand().execute(req, res);
-        } catch (ParseException | DataNotValidException e) {
+        } catch (ParseException | DataNotValidException | SQLException e) {
             LOGGER.info(e.getMessage());
             for(StackTraceElement el : e.getStackTrace()){
                 LOGGER.info(el);
